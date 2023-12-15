@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\Reservation;
-use App\Models\ReservationServices;
+use App\Models\ReservationService;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+use DB;
 
 use Illuminate\Http\Request;
 
@@ -34,12 +36,54 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Reservation created successfully', 'reservation' => $reservation], 201);
     }
     //---------------------reservation----------------------------//
+    public function approveReservation($id){
+        $approval = Reservation::find($id);
+        $approval->status = 1;
+        $approval->save();
 
-    public function index()
-    {
-        $reservations = Reservation::all(); // Fetch all reservations
-
-        return response()->json($reservations); // Return the reservations in JSON format
+        return $approval;
     }
+    public function cancelReservation($id){
+        $approval = Reservation::find($id);
+        $approval->status = 2;
+        $approval->save();
+
+        return $approval;
+    }
+    public function index()
+{
+    $adminId = Auth::id();
+
+    // Retrieve reservations
+    $reservationsData = Reservation::select('*', DB::raw("reservations.id as reservation_id"))
+        ->join('facility', 'reservations.facility_id', '=', 'facility.id')
+        ->join('clients', 'reservations.client_id', '=', 'clients.id')
+        ->where('admin_id', $adminId)
+        ->get();
+
+    // Initialize an empty array to store the result
+    $reservations = [];
+
+    // Loop through each reservation and fetch associated services
+    foreach ($reservationsData as $reservation) {
+        $reservationId = $reservation->reservation_id;
+
+        // Retrieve services for the current reservation
+        $services = ReservationService::select('*', DB::raw("reservation_services.id as reservation_service_id"))
+            ->join('services', 'reservation_services.service_id', '=', 'services.id')
+            ->where('reservation_id', $reservationId)
+            ->get();
+
+        // Add the reservation and its associated services to the result array
+        $reservations[] = [
+            'reservation_details' => $reservation,
+            'services_details' => $services,
+        ];
+    }
+
+    // Return the result as JSON
+    return response()->json($reservations);
+
+}
 
 }

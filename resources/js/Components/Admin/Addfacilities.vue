@@ -245,7 +245,9 @@
       <div class="overflow-auto max-h-96"> <!-- Set a maximum height and enable overflow scrolling -->
           <!-- Display confirmation details -->
           <p class="mt-2"><strong>Facility Name:</strong> {{ name }}</p>
+          <p class="text-justify mt-2"><strong>Short Description:</strong> <span v-html="shortdes"></span></p>
           <p class="text-justify mt-2"><strong>Facility Description:</strong> <span v-html="description"></span></p>
+          <p class="mt-2"><strong>Tags:</strong> {{ tags }}</p>
           <p class="mt-2"><strong>Facility Location:</strong> {{ location }}</p>
           <p class="mt-2"><strong>Facility Capacity:</strong> {{ capacity }}</p>
           <p class="mt-2"><strong>Prices:</strong>{{ amount }}</p>
@@ -417,7 +419,7 @@ export default {
     this.amount = '';
     this.monthFrom = '';
     this.monthTo = '';
-    this.hours = '';
+    this.hours = '';b 
     this.timePeriod = '',
     this.prices = [];
   },

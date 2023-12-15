@@ -82,6 +82,8 @@ Route::post('/list-facilities/{id}', [FacilitiesController::class, 'getFacilityD
 Route::post('/facility-prices/{id}', [FacilitiesController::class, 'getFacilityPricing']);
 Route::post('/save-edited-facility/{id}', [FacilitiesController::class, 'updateFacility']);
 Route::post('/save-edited-facility-prices/{id}', [FacilitiesController::class, 'saveEditedFacilityPrices']);
+Route::post('/approve-reservation/{id}', [ReservationController::class, 'approveReservation']);
+Route::post('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation']);
 
 
 Route::middleware(['auth'])->get('/load-admin-acilities', [FacilitiesController::class, 'loadAdminFacilities']);

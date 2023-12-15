@@ -134,9 +134,10 @@
     <div v-for="facility in facilities" :key="facility.id" class="bg-white rounded-lg shadow-md">
       <div class="p-4 bg-gray-100">
         <h3 class="font-semibold text-3xl" ><strong>{{ facility.facility_name }}</strong></h3>
-        <p class="text-gray-900 text-justify mt-4" v-html="facility.description">
-     
-        </p>  
+        <p class="text-gray-900 text-justify mt-4" v-html="facility.description"></p>  
+        <p class="text-gray-900 mt-3">
+          <span><strong>Short Description:</strong></span> {{ facility.shortdes }}
+        </p>
         <p class="text-gray-900 mt-3">
           <span><strong>Location:</strong></span> {{ facility.location }}
         </p>
@@ -144,9 +145,11 @@
           <span><strong>Capacity:</strong></span> {{ facility.capacity }}
         </p>
         <p class="text-gray-900 mt-3">
+          <span><strong>Tags:</strong></span> {{ facility.tags }}
+        </p>
+        <p class="text-gray-900 mt-3">
           <span><strong>Price:</strong></span> {{ facility.amount }}
         </p>
-
         <div v-for="price in facility.prices" :key="price.id">
                         <p>₱  {{ price.amount }} per {{ price.hours }} hours</p>
                     </div>
