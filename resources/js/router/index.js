@@ -101,69 +101,88 @@ const router = createRouter({
     {
       path: '/admin/admindashboard',
       name: 'admindashboard',
-      component: AdminDashboard
+      component: AdminDashboard,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
     {
       path: '/admin/adminfacilities',
       name: 'adminfacilities',
-      component: AdminFacilities
+      component: AdminFacilities,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
     {
       path: '/addfacilities',
       name: 'addfacilities',
-      component: Addfacilities
+      component: Addfacilities,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
     {
       path: '/admin/admincalendar',
       name: 'admincalendar',
-      component: AdminCalendar
+      component: AdminCalendar,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
     {
       path: '/admin/adminreservation',
       name: 'adminreservation',
-      component: AdminReservation
+      component: AdminReservation,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
 
-    // {
-    //   path: '/admin/adminprofile',
-    //   name: 'adminprofile',
-    //   component: AdminProfile
-    // },
-
-    // {
-    //   path: '/admin/adminpayment',
-    //   name: 'adminpayment',
-    //   component: AdminPayment
-    // },
 
     {
       path: '/admin/approved',//new
       name: 'approved',
-      component: Approved
+      component: Approved,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
 
     {
       path: '/admin/adminreport',
       name: 'adminreport',
-      component: AdminReport
+      component: AdminReport,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
 
     {
       path: '/pic/:facilityId',
       name: 'pic',
-      component: Pic
+      component: Pic,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
     
     {
       path: '/admin/adminservices',
       name: 'adminservices',
-      component: AdminServices
+      component: AdminServices,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
     },
 
     {
       path: '/editfacilities/:id', 
       name: 'EditFacilities',
-      component: EditFacilities, 
+      component: EditFacilities,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      }, 
     },
 
 

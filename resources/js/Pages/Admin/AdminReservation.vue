@@ -211,11 +211,28 @@ import reservationModal from '../ReservationModal.vue';
   },
   mounted () {
     this.loadAdminReservations();
+    this.checkUser();
   },
   methods: {
     toggleExpand(){
       this.expanded = !this.expanded;   
     },
+
+    logout() {
+        axios.post('/logout').then(({data})=>{
+          this.checkUser();
+        })
+      },
+
+      checkUser(){
+        axios.post('/check-user').then(({data})=>{
+          if(!data){
+            this.$router.push('/admin/login');
+            window.location.reload(); // Reload the page after redirecting to login
+          }
+        })
+      },
+
 
     loadAdminReservations() {
       axios.get('/reservations') // Adjust the API endpoint to fetch admin-specific reservations

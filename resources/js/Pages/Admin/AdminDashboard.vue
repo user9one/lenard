@@ -62,6 +62,7 @@
               </div> <!--Sub Nav End-->
               
               <div class="mt-6 flex justify-evenly flex-row h-36"><!--Main Box-->
+
                   <div class="shadow lg border-r-4 border-yellow-400 basis-1/4 rounded-lg text-center" style="background-color: #0C4B05"><!--Box 1-->
                       <span class="flex items-center text-white text-lg font-normal mt-2">
                           <lord-icon src="https://cdn.lordicon.com/omiqopzf.json" trigger="hover" colors="primary:#ffffff" class="w-10 h-10 mr-2" />
@@ -73,6 +74,8 @@
                           <span id="countReservations" class="font-bold text-4xl text-white">100</span>
                       </div>
                   </div><!--Box 1 End-->
+
+
                   <div class="shadow lg border-r-4 border-yellow-400 basis-1/4 rounded-lg text-center" style="background-color: #0C4B05"><!--Box 2-->
                       <span class="flex items-center text-white text-lg font-normal mt-2">
                           <lord-icon src="https://cdn.lordicon.com/ipnwkgdy.json"  trigger="hover" colors="primary:#ffffff" class="w-10 h-10 mr-2" />
@@ -80,6 +83,7 @@
                           Facilities
                           </router-link>
                       </span>
+
                       <div class="mt-5">
                           <span id="countFacilities" class="font-bold text-4xl text-white">50</span>
                       </div>
@@ -91,6 +95,7 @@
                           Payments?
                           </router-link>
                       </span>
+
                       <div class="mt-5">
                           <span id="countPayments" class="font-bold text-4xl text-white">100</span>
                       </div>
@@ -157,31 +162,22 @@ methods: {
     this.showModal = false;
   },
   animateCount(element, start, end, duration) {
-    let current = start;
-    const decrement = (start - end) / duration;
-    const timer = setInterval(() => {
-      current -= decrement;
-      element.textContent = Math.round(current);
-
-      if (current <= end) {
-        element.textContent = end;
-        clearInterval(timer);
-      }
-    }, 5);
+    
   },
-  logout() {
-      axios.post('/logout').then(({data})=>{
-        this.checkUser();
-      })
-    },
 
-    checkUser(){
-      axios.post('/check-user').then(({data})=>{
-        if(!data){
-          this.$router.push('/admin/login')
-        }
-      })
-    }
+  logout() {
+        axios.post('/logout').then(({data})=>{
+          this.checkUser();
+        })
+      },
+
+      checkUser(){
+        axios.post('/check-user').then(({data})=>{
+          if(!data){
+            this.$router.push('/admin/login')
+          }
+        })
+      }
 },
 mounted() {
   const countElementReservations = document.getElementById('countReservations');

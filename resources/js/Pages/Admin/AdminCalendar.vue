@@ -86,9 +86,26 @@
       };
     },
     methods: {
-      
-    },
+    
+      logout() {
+        axios.post('/logout').then(({data})=>{
+          this.checkUser();
+        })
+      },
+
+      checkUser(){
+        axios.post('/check-user').then(({data})=>{
+          if(!data){
+            this.$router.push('/admin/login');
+            window.location.reload(); // Reload the page after redirecting to login
+          }
+        })
+      }
+  },
+
     mounted() {
+      this.checkUser();
+
     const calendarEl = document.getElementById('calendar');
     this.calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin],

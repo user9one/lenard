@@ -220,20 +220,27 @@
     getMonthName(monthValue) {
       return this.months[monthValue - 1];
     },
-  
-    // deleteService(serviceId) {
-    //   if (confirm('Are you sure you want to delete this service?')) {
-    //     axios.delete(`/api/services/${serviceId}`)
-    //       .then(response => {
-    //         console.log('Service deleted:', response.data);
-    //         this.services = this.services.filter(service => service.id !== serviceId);
-    //       })
-    //       .catch(error => {
-    //         console.error('Error deleting service:', error);
-    //       });
-    //   }
-    // }
+
+    logout() {
+        axios.post('/logout').then(({data})=>{
+          this.checkUser();
+        })
+      },
+
+      checkUser(){
+        axios.post('/check-user').then(({data})=>{
+          if(!data){
+            this.$router.push('/admin/login');
+            window.location.reload(); // Reload the page after redirecting to login
+          }
+        })
+      }
   },
+  mounted() {
+      this.checkUser();
+    
+    },
+
   };
   </script>
   

@@ -58,6 +58,7 @@ export default {
         this.error = '';
       }, 3000); // Adjust as needed
     },
+    
     async login() {
       this.error = '';
 
@@ -74,6 +75,7 @@ export default {
       axios.post('/login', requestData).then(({ data }) => {
         if (data === 1) {
           this.$router.push('/admin/admindashboard');
+          window.location.reload();
         } else {
           this.showNotification('Incorrect username or password');
         }

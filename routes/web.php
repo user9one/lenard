@@ -49,9 +49,9 @@ Route::post('/save-services-availed', [ReservationServicesController::class, 'sa
 Route::view('/admin', 'admin');
 
 
-// Route::middleware(['auth', 'admin'])->group(function () {
-//     // Routes for the admin dashboard
-// });
+Route::middleware(['auth', 'admin'])->group(function () {
+    // Routes for the admin dashboard
+});
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/check-user', [AuthController::class, 'checkUser']);

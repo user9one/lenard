@@ -204,6 +204,21 @@ export default {
     closeModal() {
       this.showModal = false;
     },
+    
+    logout() {
+        axios.post('/logout').then(({data})=>{
+          this.checkUser();
+        })
+      },
+
+      checkUser(){
+        axios.post('/check-user').then(({data})=>{
+          if(!data){
+            this.$router.push('/admin/login');
+            window.location.reload(); // Reload the page after redirecting to login
+          }
+        })
+      },
 
 
     loadAdminFacilities() {
@@ -215,8 +230,6 @@ export default {
             console.error('Error loading admin facilities:', error);
           });
 },
-
-
 
     deleteFacility(id) {
     if (confirm('Are you sure?')) {
@@ -245,8 +258,10 @@ editFacility(id) {
     this.$router.push('/EditFacilities/' + id);
   },
   },
+
   mounted() {
     this.loadAdminFacilities();
+    this.checkUser();
   },
 
 }

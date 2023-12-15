@@ -42,15 +42,6 @@
               <div class="mb-4">
                 <label class="block text-gray-700 font-semibold" for="facility-description">Facility Description</label>
                 <ckeditor :editor="editor" :config="editorConfig" v-model="description"></ckeditor>
-                <!-- <textarea
-                  v-model="description"
-                  class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-800"
-                  id="facility-description"
-                  name="facility-description"
-                  rows="4"
-                  placeholder="Enter facility description"
-                  required
-                ></textarea> -->
                 
               </div>
     

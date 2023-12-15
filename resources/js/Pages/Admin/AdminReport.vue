@@ -481,8 +481,28 @@ export default {
     closeModal() {
       this.showModal = false;
     },
-}
-}
+    logout() {
+        axios.post('/logout').then(({data})=>{
+          this.checkUser();
+        })
+      },
+
+      checkUser(){
+        axios.post('/check-user').then(({data})=>{
+          if(!data){
+            this.$router.push('/admin/login');
+            window.location.reload(); // Reload the page after redirecting to login
+          }
+        })
+      }
+
+},
+mounted() {
+      this.checkUser();
+    
+    },
+    
+};
     
 </script>
 <style lang="">
