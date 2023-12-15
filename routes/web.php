@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
+
 use App\Http\Controllers\FacilitiesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationController;
@@ -60,7 +61,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/save-facility', [FacilitiesController::class, 'saveFacility']);
 Route::post('/facility-prices', [FacilitiesController::class, 'savePrices']);
 
-Route::middleware(['auth', 'admin'])->get('/get-admin-id', [AuthController::class, 'getAdminId']); //assign the id of the admin sa facility na inadd
+Route::get('/get-admin-id', [AuthController::class, 'getAdminId']); //assign the id of the admin sa facility na inadd
 
 
 Route::post('/allFacilities', [FacilitiesController::class, 'getAllFacilities']);

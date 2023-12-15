@@ -273,190 +273,7 @@
 
     </div>
 </template>
-  
-  <!-- <script>
-    import axios from 'axios';
-    import ClassicEditor from '/js/ckeditor_custom';
-    
-    export default {
-      data() {
-        return {
-        editor: ClassicEditor,
-        editorData: 'ckeditor 5 for laravel and vuejs',
-        editorConfig:{
-  
-        },
-          step: 1,
-          name: "",
-          description: "",
-          location: "",
-          capacity: 0,
-          amount: "",
-          monthFrom: "",
-          monthTo: "",
-          hours: "",
-          prices: [],
-  
-          months: [
-          { value: 1, name: 'January' },
-          { value: 2, name: 'February' },
-          { value: 3, name: 'March' },
-          { value: 4, name: 'April' },
-          { value: 5, name: 'May' },
-          { value: 6, name: 'June' },
-          { value: 7, name: 'July' },
-          { value: 8, name: 'August' },
-          { value: 9, name: 'September' },
-          { value: 10, name: 'October' },
-          { value: 11, name: 'November' },
-          { value: 12, name: 'December' },
-        ],
-      
-  
-      }
-        
-        
-      },
 
-
-  methods: {
-        nextStep(step) {
-          this.step = step;
-        },
-        
-        prevStep(step) {
-          this.step = step;
-        },
-        addPrice() {
-      // Validate if the selected month range conflicts with existing entries
-      const isOverlap = this.prices.some(price => {
-        const existingFrom = price.monthFrom;
-        const existingTo = price.monthTo;
-  
-        // Check if the new entry's range overlaps with an existing entry
-        return (
-          (this.monthFrom >= existingFrom && this.monthFrom <= existingTo) ||
-          (this.monthTo >= existingFrom && this.monthTo <= existingTo) ||
-          (this.monthFrom <= existingFrom && this.monthTo >= existingTo)
-        );
-      });
-  
-      if (isOverlap) {
-        // Display an error message or handle the overlap as needed
-        alert('Selected month range conflicts with existing entries');
-        return;
-      }
-  
-      // If no overlap, add the new price entry
-      this.prices.push({
-        amount: this.amount,
-        monthFrom: this.monthFrom,
-        monthTo: this.monthTo,
-        hours: this.hours,
-      });
-  
-      // Clear input fields
-      this.amount = "";
-      this.monthFrom = "";
-      this.monthTo = "";
-      this.hours = "";
-    },
-        removePrice(index) {
-          this.prices.splice(index, 1);
-        },
-        saveData() {
-          console.log('Name:', this.name);
-          console.log('Description:', this.description);
-          console.log('Capacity:', this.capacity);
-          console.log('Price:', this.price);
-          console.log('Hours:', this.hours);
-  
-  
-    const facilityForm = {
-            name: this.name,
-            description: this.description,
-            location: this.location,
-            capacity: this.capacity,
-            hours: this.hours,
-            prices: this.prices,
-          };
-  
-       
-        axios.post('/save-facility', facilityForm)
-          .then((response) => {
-           
-            console.log('Facility data successfully uploaded:', response.data);
-            const facilityId = response.data.id; 
-          
-            this.savePrices(facilityId);
-          })
-          .catch((error) => {
-          
-            console.error('Error uploading facility data:', error);
-          });
-      },
-  
-      savePrices(facilityId) {
-      
-        const pricesData = this.prices.map((price) => ({
-          facility_id: facilityId,
-          amount: price.amount,
-          monthFrom: price.monthFrom,
-          monthTo: price.monthTo,
-          hours: price.hours,
-        }));
-  
-        // Send the pricesData to your Laravel backend
-        axios.post('/facility-prices', pricesData)
-          .then((response) => {
-            // Handle the response from your backend
-            console.log('Prices data successfully uploaded:', response.data);
-            // Clear the form data and reset the step
-            this.resetForm();
-          })
-          .catch((error) => {
-            // Handle errors
-            console.error('Error uploading prices data:', error);
-          });
-      },
-  
-        resetForm() {
-          this.step = 1;
-          this.name = "";
-          this.description = "";
-          this.location = "";
-          this.capacity = 0;
-          this.amount = "";
-          this.monthFrom = "";
-          this.monthTo = "";
-          this.hours = "";
-          this.prices = [];
-        },
-  
-        getMonthName(monthValue) {
-        const months = [
-          'January', 'February', 'March', 'April',
-          'May', 'June', 'July', 'August',
-          'September', 'October', 'November', 'December'
-        ];
-  
-        return months[monthValue - 1];
-      },
-      displayEditorResult(){
-              document.getElementById('resultingText').innerHTML = this.editorData;
-          },
-          emptyEditor(){
-              this.editorData='';
-          }
-      },
-          mounted() {
-          this.editorData="";
-      
-      },
-  
-    };
-    </script>
-   -->
 
 <script>
 import axios from 'axios';
@@ -470,13 +287,16 @@ export default {
       editorConfig: {},
       step: 1,
       name: '',
+      shortdes: '',
       description: '',
       location: '',
+      tags: '',
       capacity: 0,
       amount: '',
       monthFrom: '',
       monthTo: '',
       hours: '',
+      timePeriod: '',
       prices: [],
       months: [
         { value: 1, name: 'January' },
@@ -496,93 +316,134 @@ export default {
     };
   },
   methods: {
-
-    nextStep(step) {
-        this.step = step;
+    removePrice(index) {
+        this.prices.splice(index, 1);
       },
-      
-      prevStep(step) {
-        this.step = step;
-      },
+    addPrice() {
+  this.prices.push({
+    amount: this.amount,
+    monthFrom: this.monthFrom,
+    monthTo: this.monthTo,
+    hours: this.hours,
+    timePeriod: this.timePeriod,
+  });
 
-    async getAdminId() {
-      try {
-        const response = await axios.get('/get-admin-id');
-        this.adminId = response.data.admin_id;
-      } catch (error) {
-        console.error('Error getting admin ID:', error);
-      }
-    },
-    async saveData() {
+  // Clear the form fields after adding a price
+  this.amount = '';
+  this.monthFrom = '';
+  this.monthTo = '';
+  this.hours = '';
+  this.timePeriod = '';
+},
+
+  nextStep(step) {
+    this.step = step;
+  },
+  
+  prevStep(step) {
+    this.step = step;
+  },
+
+  async fetchLoggedInAdminId() {
+    try {
+      const response = await axios.get('/get-admin-id');
+      return response.data.admin_id;
+    } catch (error) {
+      console.error('Error getting logged-in admin ID:', error);
+      throw error;
+    }
+  },
+
+  async saveData() {
+    try {
+      this.adminId = await this.fetchLoggedInAdminId();
+
       if (!this.adminId) {
         console.error('Admin ID not available. Unable to save data.');
         return;
       }
+
       const facilityForm = {
         admin_id: this.adminId,
         name: this.name,
+        shortdes: this.shortdes,
         description: this.description,
         location: this.location,
+        tags: this.tags,
         capacity: this.capacity,
         hours: this.hours,
+        timePeriod: this.timePeriod,
         prices: this.prices,
       };
-      try {
-        const response = await axios.post('/save-facility', facilityForm);
-        console.log('Facility data successfully uploaded:', response.data);
-        const facilityId = response.data.id;
-        await this.savePrices(facilityId);
-      } catch (error) {
-        console.error('Error uploading facility data:', error);
-      }
-    },
-    async savePrices(facilityId) {
-      const pricesData = this.prices.map((price) => ({
-        facility_id: facilityId,
-        amount: price.amount,
-        monthFrom: price.monthFrom,
-        monthTo: price.monthTo,
-        hours: price.hours,
-      }));
-      try {
-        const response = await axios.post('/facility-prices', pricesData);
-        console.log('Prices data successfully uploaded:', response.data);
-        this.resetForm();
-      } catch (error) {
-        console.error('Error uploading prices data:', error);
-      }
-    },
-    resetForm() {
-      this.step = 1;
-      this.name = '';
-      this.description = '';
-      this.location = '';
-      this.capacity = 0;
-      this.amount = '';
-      this.monthFrom = '';
-      this.monthTo = '';
-      this.hours = '';
-      this.prices = [];
-    },
-    mounted() {
-      this.editorData = '';
-      this.getAdminId();
-    },
-    getMonthName(monthValue) {
-      const months = [
-        'January', 'February', 'March', 'April',
-        'May', 'June', 'July', 'August',
-        'September', 'October', 'November', 'December'
-      ];
-      return months[monthValue - 1];
-    },
-    displayEditorResult() {
-      document.getElementById('resultingText').innerHTML = this.editorData;
-    },
-    emptyEditor() {
-      this.editorData = '';
-    },
+
+      const response = await axios.post('/save-facility', facilityForm);
+      console.log('Facility data successfully uploaded:', response.data);
+      const facilityId = response.data.id;
+
+      await this.savePrices(facilityId);
+    } catch (error) {
+      console.error('Error uploading facility data:', error);
+    }
   },
+
+  async savePrices(facilityId) {
+    const pricesData = this.prices.map((price) => ({
+      facility_id: facilityId,
+      amount: price.amount,
+      monthFrom: price.monthFrom,
+      monthTo: price.monthTo,
+      hours: price.hours,
+      timePeriod: price.timePeriod
+    }));
+
+    try {
+      const response = await axios.post('/facility-prices', pricesData);
+      console.log('Prices data successfully uploaded:', response.data);
+      this.resetForm();
+      this.$router.push('/admin/adminfacilities');
+    } catch (error) {
+      console.error('Error uploading prices data:', error);
+    }
+  },
+
+  resetForm() {
+    this.step = 1;
+    this.name = '';
+    this.shortdes
+    this.description = '';
+    this.location = '';
+    this.tags = '',
+    this.capacity = 0;
+    this.amount = '';
+    this.monthFrom = '';
+    this.monthTo = '';
+    this.hours = '';
+    this.timePeriod = '',
+    this.prices = [];
+  },
+
+  async mounted() {
+    this.editorData = '';
+    await this.fetchLoggedInAdminId();
+  },
+
+  getMonthName(monthValue) {
+    const months = [
+      'January', 'February', 'March', 'April',
+      'May', 'June', 'July', 'August',
+      'September', 'October', 'November', 'December'
+    ];
+    return months[monthValue - 1];
+  },
+
+  displayEditorResult() {
+    document.getElementById('resultingText').innerHTML = this.editorData;
+  },
+
+  emptyEditor() {
+    this.editorData = '';
+  },
+},
 };
 
 

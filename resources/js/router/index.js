@@ -23,6 +23,8 @@ import AdminReport from "../Pages/Admin/AdminReport.vue"
 import Pic from "../Components/Admin/Pic.vue"
 import AdminServices from "../Pages/Admin/AdminServices.vue"
 import EditFacilities from "../Components/Admin/EditFacilities.vue"
+//---New----//
+import Approved from "../Components/Admin/Approved.vue"
 
 
 
@@ -133,6 +135,12 @@ const router = createRouter({
     //   name: 'adminpayment',
     //   component: AdminPayment
     // },
+
+    {
+      path: '/admin/approved',//new
+      name: 'approved',
+      component: Approved
+    },
 
     {
       path: '/admin/adminreport',

@@ -22,15 +22,11 @@ class Reservation extends Model
         'total'
     ];
 
-    // Define relationships
-    public function client()
-    {
-        return $this->belongsTo(Client::class);
-    }
+   // In a controller, e.g., ReservationController.php
+public function getReservations() {
+    $reservations = Reservation::all(); // Assuming Reservation is your model
+    return response()->json($reservations);
+}
 
-    public function reservationServices()
-    {
-        return $this->hasMany(ReservationServices::class);
-    }
 
 }

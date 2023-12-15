@@ -63,13 +63,14 @@ class FacilitiesController extends Controller
 
                 public function getFacilityPricing($id)
                     {
-                        $facility = Facility::with('prices')->find($id);
+                        
+                        $facility = FacilityPrice::where('facility_id', $id)->get();
 
                         if (!$facility) {
                             return response()->json(['error' => 'Facility not found'], 404);
                         }
 
-                        return response()->json($facility->prices); // Return the pricing details for the facility
+                        return $facility; // Return the pricing details for the facility
                     }
 
 
@@ -102,7 +103,7 @@ public function saveFacility(Request $request)
             $facilityPrice->amount = $price['amount'];
             $facilityPrice->monthFrom = $price['monthFrom'];
             $facilityPrice->monthTo = $price['monthTo'];
-            $price->timePeriod = $priceData['timePeriod'];
+            $facilityPrice->timePeriod = $price['timePeriod'];
             $facilityPrice->hours = $price['hours'];
             $facilityPrice->save();
         }

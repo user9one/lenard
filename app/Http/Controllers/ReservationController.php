@@ -9,11 +9,10 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    // Create a reservation
+   
     public function saveReservation(Request $request)
     {
 
-        // Create a new reservation
         $client_id = Session::get('client_id');
 
         $reservation = new Reservation();
@@ -27,13 +26,20 @@ class ReservationController extends Controller
         $reservation->startTime = $request->startTime;
         $reservation->endTime = $request->endTime;
         $reservation->total = $request->totalPrice;
-        // Capture other request data
-
-        // Save the reservation
+  
         $reservation->save();
 
         Session::put('reservation_id', $reservation['id']);
 
         return response()->json(['message' => 'Reservation created successfully', 'reservation' => $reservation], 201);
     }
+    //---------------------reservation----------------------------//
+
+    public function index()
+    {
+        $reservations = Reservation::all(); // Fetch all reservations
+
+        return response()->json($reservations); // Return the reservations in JSON format
+    }
+
 }
