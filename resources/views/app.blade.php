@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMSU Facilities</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/> <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+ 
+  
 </head>
 <body>
     <div id="app">
@@ -14,8 +18,8 @@
             <AdminDashboard />
         @else
             <App />
-        @endif
-        
+            @endif
+
     </div>
     
     <script>

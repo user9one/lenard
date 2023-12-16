@@ -28,7 +28,7 @@
                     <div>Name: {{reservation.reservation_details.fname}} {{reservation.reservation_details.mname}} {{reservation.reservation_details.lname}}</div>
                     <div>Email: {{reservation.reservation_details.email}}</div>
                     <div>Phone: {{reservation.reservation_details.phone}}</div>
-                    <div>MMSU Affiliated: {{reservation.reservation_details.mmsu_affliated === 1 ? 'Yes' : 'No'}}</div>
+                    <div>MMSU Affiliated: {{reservation.reservation_details.mmsu_affiliated === 1 ? 'Yes' : 'No'}}</div>
                     <div>Univ_id: {{ reservation.reservation_details.university_id !== null ? reservation.reservation_details.university_id : 'N/A' }}</div>
                     <div>College: {{ reservation.reservation_details.college !== null ? reservation.reservation_details.college : 'N/A' }}</div>
                     <div>Department: {{ reservation.reservation_details.department !== null ? reservation.reservation_details.department : 'N/A' }}</div>
@@ -38,6 +38,7 @@
                     <div>Service Name: {{reservation.service_name}}</div>
                     <div>Quantity: {{reservation.quantity !== null ? reservation.quantity : 'N/A'}}</div>
                     <div>Remarks: {{reservation.remarks}}</div>
+                    <div>Total: {{reservation.total_prices}}</div>
                 </div>
                 <!-- Add more fields as needed -->
             </div>
@@ -51,9 +52,12 @@
 </template>
 <script>
 export default {
-  props: [
-    'reservation'
-  ],
+  props: {
+    reservation: {
+      type: Object,
+      default: null
+    }
+  },
     data() {
       return {
         

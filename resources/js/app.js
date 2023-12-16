@@ -14,7 +14,7 @@ import router from "./router"
 
 import VueSplide from '@splidejs/vue-splide';
 import CKEditor from '@ckeditor/ckeditor5-vue';
-
+import FullCalendar from '@fullcalendar/vue3';
 
 const app = createApp(App);
 app.use(router);
