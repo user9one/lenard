@@ -28,5 +28,20 @@ public function getReservations() {
     return response()->json($reservations);
 }
 
+// Define relationships
+public function services()
+{
+    return $this->hasMany(ReservationService::class);
+}
+
+public function facility()
+{
+    return $this->belongsTo(Facility::class);
+}
+
+public function client()
+{
+    return $this->belongsTo(Client::class);
+}
 
 }

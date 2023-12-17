@@ -69,6 +69,8 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/save-facility', [FacilitiesController::class, 'saveFacility']);
 Route::post('/facility-prices', [FacilitiesController::class, 'savePrices']);
 
+Route::post('/save-services', [ServicesController::class, 'saveServices']);
+
 Route::get('/get-admin-id', [AuthController::class, 'getAdminId']); //assign the id of the admin sa facility na inadd
 
 
@@ -80,12 +82,15 @@ Route::post('/upload-image', [ImageController::class, 'store']);
 Route::post('/imageList', [ImageController::class, 'imageList']);
 Route::post('/delete-image/{id}', [ImageController::class, 'deleteImage']);
 
+Route::get('/get-services', [ServicesController::class, 'getServices']);
+Route::put('/update-services/{id}', [ServicesController::class, 'editService']);
+Route::delete('/delete-services/{id}', [ServicesController::class, 'deleteService']);
+
+
 Route::get('/reservations', [ReservationController::class, 'index']);
 Route::get('/services', [ServicesController::class, 'index']);
 Route::post('/services', [ServicesController::class, 'store']);
 Route::delete('/services/{service}', [ServicesController::class, 'destroy']);
-
-
 Route::post('/list-facilities/{id}', [FacilitiesController::class, 'getFacilityDetails']);
 Route::post('/facility-prices/{id}', [FacilitiesController::class, 'getFacilityPricing']);
 Route::post('/save-edited-facility/{id}', [FacilitiesController::class, 'updateFacility']);

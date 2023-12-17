@@ -14,6 +14,7 @@ import Notfound from "../Pages/Notfound.vue";
 import Login from '../Components/Admin/Login.vue';
 import AdminDashboard from "../Pages/Admin/AdminDashboard.vue"
 import Addfacilities from "../Components/Admin/Addfacilities.vue"
+import Addservices from "../Components/Admin/Addservices.vue"
 import AdminFacilities from "../Pages/Admin/AdminFacilities.vue"
 import AdminCalendar from "../Pages/Admin/AdminCalendar.vue"
 import AdminReservation from "../Pages/Admin/AdminReservation.vue"
@@ -118,6 +119,14 @@ const router = createRouter({
       path: '/addfacilities',
       name: 'addfacilities',
       component: Addfacilities,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
+    },
+    {
+      path: '/addservices',
+      name: 'addservices',
+      component: Addservices,
       meta: {
         requiresAuth: true, // This route requires authentication
       },

@@ -1,6 +1,7 @@
+
 <template lang="">
     <div class="flex flex-row w-full"><!--Main-->
-      <aside class="sticky top-0 shadow-lg shadow-gray-500 w-80 h-screen"><!--Side Nav-->
+      <aside class="sticky top-0  shadow-gray-500 w-80 h-screen"><!--Side Nav-->
         <div class="flex items-center justify-center h-14 mt-20">
            <img src="\src\mmsu-logo.png" alt="Logo" class="w-36" />
         </div>
@@ -50,7 +51,7 @@
             </div>
         </aside><!--Side Bav End-->
   
-        <div class="bg-gray-100 shadow-xl h-screen w-full"  style="font-family: Advantage"><!--Content-->
+        <div class="bg-gray-100 min-h-screen w-full"  style="font-family: arial"><!--Content-->
             <div class="grid grid-cols-1 flex flex-row border-b-4 border-yellow-400"><!--Sub Nav-->
                 <div class="shadow-md h-20 flex justify-start" style="background-color: #0C4B05">
                     <span class="flex items-center text-white text-xl font-semibold ml-4">
@@ -59,190 +60,147 @@
                     </span>
                 </div>
             </div> <!--Sub Nav End--> 
-  
-  
-            <div class="m-8">
-  <form @submit.prevent="addService" class="flex flex-col space-y-4"  style="font-family: Advantage">
-    <div class="flex flex-row space-x-4">
-      <div class="w-1/3">
-        <label class="block text-gray-700 font-semibold" for="service-name">Service Name</label>
-        <input
-          v-model="serviceName"
-          class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-800"
-          type="text"
-          id="service-name"
-          name="service-name"
-          placeholder="Enter service name"
-          required
-        />
-      </div>
-      <div class="w-1/3">
-        <label class="block text-gray-700 font-semibold" for="service-type">Type</label>
-        <select
-          v-model="serviceType"
-          id="service-type"
-          class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-800"
-        >
-          <option value="Equipment">Equipment</option>
-          <option value="Food">Food</option>
-          <!-- Add other types as needed -->
-        </select>
-      </div>
-      <div class="w-1/3">
-        <label class="block text-gray-700 font-semibold" for="service-fee">Fee</label>
-        <input
-          v-model="serviceFee"
-          class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-800"
-          type="number"
-          id="service-fee"
-          name="service-fee"
-          placeholder="Enter service fee"
-          required
-        />
-      </div>
-    </div>
-  
-    <div class="flex flex-row space-x-4">
-      <div class="w-1/2">
-        <label class="block text-gray-700 font-semibold" for="month-from">Month From</label>
-        <select
-          v-model="monthFrom"
-          id="month-from"
-          class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-800"
-        >
-          <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
-        </select>
-      </div>
-      <div class="w-1/2">
-        <label class="block text-gray-700 font-semibold" for="month-to">Month To</label>
-        <select
-          v-model="monthTo"
-          id="month-to"
-          class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-800"
-        >
-          <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
-        </select>
-      </div>
-     
+
+
+            <div class="flex justify-end mt-7 mr-6">
+          <div class="bg-gray-300 rounded-full py-2 px-4 mr-4">
+            <router-link :to="{ name: 'addservices' }" class="text-black">Add New Service</router-link>
           </div>
-  
-          <button
-  type="submit"
-  class="bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded focus-outline-none focus-ring-2 focus-ring-green-500 mx-auto transition ease-in-out delay-200 hover:-translate-y-1 hover:scale-110 hover:duration-300 "
-  >
-  Add Service
-  </button>
-        </form>
-      </div>
-  
-      <!-- Display the result in a table -->
-      <div class="m-8">
-  <table class="w-full border-collapse">
-    <thead>
-      <tr class="bg-gray-200">
-        <th class="px-4 py-2 text-center border">Service Name</th>
-        <th class="px-4 py-2 text-center border">Type</th>
-        <th class="px-4 py-2 text-center border">Fee</th>
-        <th class="px-4 py-2 text-center border">Month From</th>
-        <th class="px-4 py-2 text-center border">Month To</th>
-        <!-- <th class="px-4 py-2 text-center border">Actions</th> -->
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(service, index) in services" :key="index" :class="index % 2 === 0 ? 'bg-gray-100' : 'bg-white'">
-        <td class="px-4 py-2 text-center border">{{ service.name }}</td>
-        <td class="px-4 py-2 text-center border">{{ service.type }}</td>
-        <td class="px-4 py-2 text-center border">{{ service.fee }}</td>
-        <td class="px-4 py-2 text-center border">{{ getMonthName(service.monthFrom) }}</td>
-        <td class="px-4 py-2 text-center border">{{ getMonthName(service.monthTo) }}</td>
-        <!-- <td class="px-4 py-2 text-center border">
-    <button @click="deleteService(service.id)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-      Delete
-    </button>
-  </td> -->
-      </tr>
-    </tbody>
-  </table>
-  </div>  
+          <router-view></router-view>
+        </div>
+
+
+
+          <!-- ADD TABLE HERE -->
+          <!-- Table section -->
+      <table class="m-8">
+        <thead>
+          <tr>
+            <th class="px-4 py-2 text-center border">Service Name</th>
+            <th class="px-4 py-2 text-center border">Type</th>
+            <th class="px-4 py-2 text-center border">Fee</th>
+            <th class="px-4 py-2 text-center border">Unit</th>
+            <th class="px-4 py-2 text-center border">Note</th>
+            <th class="px-4 py-2 text-center border">Month From</th>
+            <th class="px-4 py-2 text-center border">Month To</th>
+            <th class="px-4 py-2 text-center border">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through services data -->
+          <tr v-for="(service, index) in services" :key="index">
+            <td class="px-4 py-2 text-center border">{{ service.service_name }}</td>
+            <td class="px-4 py-2 text-center border">{{ service.type }}</td>
+            <td class="px-4 py-2 text-center border">{{ service.fee }}</td>
+            <td class="px-4 py-2 text-center border">{{ service.unit }}</td>
+            <td class="px-4 py-2 text-center border">{{ service.note }}</td>
+            <td class="px-4 py-2 text-center border">{{ getMonthName(service.monthFrom) }}</td>
+            <td class="px-4 py-2 text-center border">{{ getMonthName(service.monthTo) }}</td>
+            <td class="px-4 py-2 text-center border items-center">
+                <!-- Edit button -->
+                <button @click="editService(index)" class="rounded-md px-3 py-1 mr-2 bg-yellow-300 text-black">Edit</button>
+                <!-- Delete button -->
+                <button @click="deleteService(index)" class="rounded-md px-3 py-1 bg-red-500 text-white mt-3">Delete</button>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+ 
     </div>
-  
   </div>
   </template>
   
   <script>
   import axios from 'axios';
-  
-  export default {
-  data() {
-    return {
-      isSidePanelOpen: true,
-      showModal: false,
-      serviceName: "",
-      serviceType: "",
-      serviceFee: "",
-      monthFrom: "",
-      monthTo: "",
-      services: [],
-      months: [
-        'January', 'February', 'March', 'April',
-        'May', 'June', 'July', 'August',
-        'September', 'October', 'November', 'December'
-      ],
-    };
-  },
-  
-  methods: {
-    toggleSidePanel() {
-      this.isSidePanelOpen = !this.isSidePanelOpen;
-    },
-    topenModal() {
-      this.showModal = true;
-    },
-    closeModal() {
-      this.showModal = false;
-    },
-    addService() {
-      this.services.push({
-        name: this.serviceName,
-        type: this.serviceType,
-        fee: this.serviceFee,
-        monthFrom: this.monthFrom,
-        monthTo: this.monthTo,
-      });
-  
-      this.serviceName = "";
-      this.serviceType = "";
-      this.serviceFee = "";
-      this.monthFrom = "";
-      this.monthTo = "";
-    },
-  
-    getMonthName(monthValue) {
-      return this.months[monthValue - 1];
-    },
+  import Swal from 'sweetalert2';
 
-    logout() {
-        axios.post('/logout').then(({data})=>{
-          this.checkUser();
-        })
+  export default {
+    data() {
+      return {
+        services: [], 
+      };
+    },
+    methods: {
+
+      fetchServices() {
+        axios.get('/get-services')
+          .then(response => {
+            this.services = response.data; // Assuming the services are returned as an array
+          })
+          .catch(error => {
+            console.error('Error fetching services:', error);
+          });
       },
 
-      checkUser(){
-        axios.post('/check-user').then(({data})=>{
-          if(!data){
+      // editService(index) {
+      //   // Implement logic to handle editing a service by its index
+      //   // You might navigate to an edit page or show a modal for editing
+      //   const serviceToEdit = this.services[index];
+      //   // Implement the logic to edit the service
+      //   // For example, navigate to an edit page passing serviceToEdit data
+      // },
+
+      // deleteService(index) {
+      //   // Confirm delete action using SweetAlert or any other confirmation approach
+      //   Swal.fire({
+      //     title: 'Are you sure?',
+      //     text: 'You will not be able to recover this service!',
+      //     icon: 'warning',
+      //     showCancelButton: true,
+      //     confirmButtonColor: '#d33',
+      //     cancelButtonColor: '#3085d6',
+      //     confirmButtonText: 'Yes, delete it!'
+
+      //   }).then((result) => {
+      //     if (result.isConfirmed) {
+      //       // Call backend to delete the service
+      //       const serviceIdToDelete = this.services[index].id; // Assuming the service has an 'id'
+      //       axios.delete(`/delete-services/${serviceIdToDelete}`)
+      //         .then(response => {
+      //           // Remove the service from the local array after successful deletion
+      //           this.services.splice(index, 1);
+      //           Swal.fire('Deleted!', 'Your service has been deleted.', 'success');
+      //         })
+      //         .catch(error => {
+      //           console.error('Error deleting service:', error);
+      //           Swal.fire('Error!', 'Failed to delete service.', 'error');
+      //         });
+      //     }
+      //   });
+      // },
+     
+      getMonthName(monthValue) {
+        const months = [
+          'January', 'February', 'March', 'April',
+          'May', 'June', 'July', 'August',
+          'September', 'October', 'November', 'December'
+        ];
+
+        return months[monthValue - 1] || ''; // Subtract 1 because JavaScript's month index starts from 0
+      },
+
+
+      logout() {
+        axios.post('/logout').then(({ data }) => {
+          this.checkUser();
+      });
+      },
+      checkUser() {
+        axios.post('/check-user').then(({ data }) => {
+          if (!data) {
             this.$router.push('/admin/login');
             window.location.reload(); // Reload the page after redirecting to login
           }
-        })
+        });
       }
-  },
-  mounted() {
-      this.checkUser();
-    
     },
-
+    mounted() {
+      this.checkUser();
+      this.fetchServices();
+    },
   };
-  </script>
+</script>
+
   
   
   <style lang="">
@@ -260,7 +218,7 @@
   }
   
   /* Result Table Styles */
-  .m-8 table {
+.m-8 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
@@ -291,21 +249,7 @@
   }
   
   /* Button Style */
-  .m-8 button {
-  padding: 12px 18px;
-  background-color: #0C4B05;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 14px;
-  }
-  
-  .m-8 button:hover {
-  background-color: #084104;
-  }
-  
+
   .centered-content {
     margin: auto;
     display: flex;

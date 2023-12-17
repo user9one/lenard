@@ -13,7 +13,9 @@ class Service extends Model
         'type',
         'fee',
         'unit',
-        'remarks',
+        'note',
+        'monthFrom',
+        'monthTo'
     ];
 
     // Define the relationship - a service can have many reservation services

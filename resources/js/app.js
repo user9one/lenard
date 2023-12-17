@@ -1,3 +1,4 @@
+
 require('./bootstrap');
 
 import { createApp } from 'vue';
@@ -7,6 +8,7 @@ import Footer from './Components/Footer.vue'
 import ImageCarousel from './Components/ImageCarousel.vue'
 import AdminDashboard from './Pages/Admin/AdminDashboard.vue';
 import Addfacilities from './Components/Admin/Addfacilities.vue';
+import Addservices from './Components/Admin/Addservices.vue';
 import ReviewForm from './Components/ReviewForm.vue';
 import '../css/app.css';
 import router from "./router"
@@ -23,6 +25,7 @@ app.component('Footer', Footer);
 app.component('ImageCarousel', ImageCarousel);
 app.component('AdminDashboard', AdminDashboard);
 app.component('Addfacilities', Addfacilities);
+app.component('Addservices', Addservices);
 app.component('ReviewForm', ReviewForm);
 
 app.mount('#app');

@@ -31,7 +31,10 @@
       </div>
 
       <!-- Calendar -->
-      <FullCalendar v-bind:options="calendarOptions" :events="events" />
+      <!-- Render FullCalendar only when events are available -->
+          <div v-if="events.length > 0">
+            <FullCalendar v-bind:options="calendarOptions" :events="events" />
+          </div>
 
       <!-- Modal -->
       <!-- Modal -->
@@ -54,17 +57,26 @@
               <div>Name: {{ selectedReservation.reservation_details.fname }} {{ selectedReservation.reservation_details.mname }} {{ selectedReservation.reservation_details.lname }}</div>
               <div>Email: {{ selectedReservation.reservation_details.email }}</div>
               <div>Phone: {{ selectedReservation.reservation_details.phone }}</div>
-              <div>MMSU Affiliated: {{ selectedReservation.reservation_details.mmsu_affiliated === 1 ? 'Yes' : 'No' }}</div>
-              <div>Univ_id: {{ selectedReservation.reservation_details.university_id !== null ? selectedReservation.reservation_details.university_id : 'N/A' }}</div>
-              <div>College: {{ selectedReservation.reservation_details.college !== null ? selectedReservation.reservation_details.college : 'N/A' }}</div>
-              <div>Department: {{ selectedReservation.reservation_details.department !== null ? selectedReservation.reservation_details.department : 'N/A' }}</div>
+              <div v-if="selectedReservation.reservation_details.mmsu_affiliated === 1">
+                        MMSU Affiliated: Yes
+                        <div v-if="selectedReservation.reservation_details.university_id !== null">Univ_id: {{ selectedReservation.reservation_details.university_id }}</div>
+                        <div v-if="selectedReservation.reservation_details.college !== null">College: {{ selectedReservation.reservation_details.college }}</div>
+                        <div v-if="selectedReservation.reservation_details.department !== null">Department: {{ selectedReservation.reservation_details.department }}</div>
+                    </div>
+                    <div v-else>
+                        MMSU Affiliated: No
+                        <div v-if="selectedReservation.reservation_details.officeAgency !== null">Office/Agency: {{ selectedReservation.reservation_details.officeAgency }}</div>
+                    </div>
             </div>
+
+            
             <br>
             <!-- Services Details -->
             <div v-for="service in selectedReservation.services_details" :key="service.id" class="bg-white shadow p-4">
               <div>Service Name: {{ service.service_name }}</div>
-              <div>Quantity: {{ service.quantity !== null ? service.quantity : 'N/A' }}</div>
-              <div>Remarks: {{ service.remarks }}</div>
+              <div v-if="service.quantity !== null">Quantity: {{ service.quantity }}</div>
+                    <div v-if="service.remarks !== null">Remarks: {{ service.remarks }}</div>
+                    <div>Total: {{ service.total_prices }}</div>
             </div>
           </div>
           <button @click="closeModal" class="modal-close-btn">Close</button>
@@ -90,6 +102,7 @@ import { watch } from 'vue';
 const events = ref([]);
 const selectedReservation = ref(null);
 const showModal = ref(false);
+const calendarRenderKey = ref(0); // Key to force re-render of FullCalendar
 
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
@@ -131,60 +144,58 @@ const closeModal = () => {
   showModal.value = false;
 };
 
-onMounted(() => {
-  axios.get('/reservations')
-    .then(response => {
-      console.log('Fetched reservations:', response.data);
-      if (Array.isArray(response.data)) {
-        const mappedEvents = response.data.map(reservation => {
-          const start = `${reservation.reservation_details.eventDateFrom}T${reservation.reservation_details.startTime}`;
-          const end = `${reservation.reservation_details.eventDateTo}T${reservation.reservation_details.endTime}`;
+onMounted(async () => {
+  try {
+    const response = await axios.get('/reservations');
+    if (Array.isArray(response.data)) {
+      const mappedEvents = response.data.map(reservation => {
+        const start = `${reservation.reservation_details.eventDateFrom}T${reservation.reservation_details.startTime}`;
+        const end = `${reservation.reservation_details.eventDateTo}T${reservation.reservation_details.endTime}`;
 
-          let eventColor = ''; // Set default color
+        let eventColor = '';
+        switch (reservation.reservation_details.Status) {
+          case 0:
+            eventColor = 'lightblue';
+            break;
+          case 1:
+            eventColor = 'yellow';
+            break;
+          case 2:
+            eventColor = 'lightgreen';
+            break;
+          case 3:
+            eventColor = 'pink';
+            break;
+          default:
+            eventColor = 'lightblue';
+        }
 
-          switch (reservation.reservation_details.Status) {
-            case 0:
-              eventColor = 'lightblue'; // Light blue for pending
-              break;
-            case 1:
-              eventColor = 'yellow'; // Yellow for approved
-              break;
-            case 2:
-              eventColor = 'lightgreen'; // Green for done
-              break;
-            case 3:
-              eventColor = 'pink'; // Pink for declined
-              break;
-            default:
-              eventColor = 'lightblue'; // Default color if status is not defined
-          }
+        return {
+          title: reservation.reservation_details.event_name,
+          start,
+          end,
+          reservation_details: {
+            ...reservation.reservation_details,
+          },
+          services_details: reservation.services_details || [], // Extract services_details
+          color: eventColor,
+        };
+      });
 
-          return {
-            title: reservation.reservation_details.event_name,
-            start,
-            end,
-            reservation_details: {
-              ...reservation.reservation_details,
-            },
-            services_details: reservation.services_details || [], // Extract services_details
-            color: eventColor, // Set color based on status
-          };
-        });
-        console.log('Mapped events:', mappedEvents);
-        events.value = mappedEvents;
-      } else {
-        console.error('Invalid data format: Unable to process the response.');
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching reservations:', error);
-    });
+      events.value = mappedEvents; // Update events after processing the response
+    } else {
+      console.error('Invalid data format: Unable to process the response.');
+    }
+  } catch (error) {
+    console.error('Error fetching reservations:', error);
+  }
 });
 
-// Add a watcher
-watch(events, (newVal) => {
-  console.log('Events updated:', newVal);
+// Watch for changes in events and update the key to trigger re-render
+watch(events, () => {
+  calendarRenderKey.value += 1; // Increment key to force re-render
 });
+
 </script>
 
 <style>

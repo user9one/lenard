@@ -77,19 +77,19 @@
        <!-- Main content -->
        <div class="main-content mx-10">
 
-<!-- Modal overlay -->
-<div class="modal-overlay" v-if="showReviewForm">
-  <!-- Modal content -->
-  <div class="modal">
-    <!-- Close button -->
-    <button @click="closeReviewForm" class="bg-red-500 text-white font-bold py-2 px-4 rounded mb-4">
-      Close
-    </button>
+          <!-- Modal overlay -->
+          <div class="modal-overlay" v-if="showReviewForm">
+            <!-- Modal content -->
+            <div class="modal">
+              <!-- Close button -->
+              <button @click="closeReviewForm" class="bg-red-500 text-white font-bold py-2 px-4 rounded mb-4">
+                Close
+              </button>
 
-    <!-- ReviewForm component -->
-    <ReviewForm />
-  </div>
-</div>
+              <!-- ReviewForm component -->
+              <ReviewForm />
+            </div>
+          </div>
 
 <!-- Facility Reviews section -->
 <div class="facility-reviews mt-2 flex justify-between items-center">
@@ -268,6 +268,9 @@ export default {
   },
 };
 </script>
+
+
+
 <style scoped>
 .headerdiv {
   background-color: #dedede;
@@ -394,13 +397,27 @@ export default {
   padding: 20px;
   border-radius: 5px;
   overflow-y: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Button styles */
-button {
+.close-button {
   font-weight: bold;
   cursor: pointer;
+  position: absolute;
+  top: 10px; /* Adjust this value to place the button where you want vertically */
+  left: 10px; /* Adjust this value to place the button where you want horizontally */
 }
+
+/* Form container */
+.form-container {
+  flex: 1;
+  /* Add any necessary styles for your form container */
+}
+
 
 /* Space above footer */
 .Footer {
@@ -413,4 +430,5 @@ button {
   font-size: 24px;
   font-weight: bold;
 }
+
 </style>
