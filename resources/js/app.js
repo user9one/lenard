@@ -9,6 +9,7 @@ import ImageCarousel from './Components/ImageCarousel.vue'
 import AdminDashboard from './Pages/Admin/AdminDashboard.vue';
 import Addfacilities from './Components/Admin/Addfacilities.vue';
 import Addservices from './Components/Admin/Addservices.vue';
+import EditServices from './Components/Admin/EditServices.vue';
 import ReviewForm from './Components/ReviewForm.vue';
 import '../css/app.css';
 import router from "./router"
@@ -26,6 +27,7 @@ app.component('ImageCarousel', ImageCarousel);
 app.component('AdminDashboard', AdminDashboard);
 app.component('Addfacilities', Addfacilities);
 app.component('Addservices', Addservices);
+app.component('EditServices', EditServices);
 app.component('ReviewForm', ReviewForm);
 
 app.mount('#app');

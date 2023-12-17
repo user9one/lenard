@@ -14,19 +14,19 @@ import Notfound from "../Pages/Notfound.vue";
 import Login from '../Components/Admin/Login.vue';
 import AdminDashboard from "../Pages/Admin/AdminDashboard.vue"
 import Addfacilities from "../Components/Admin/Addfacilities.vue"
-import Addservices from "../Components/Admin/Addservices.vue"
 import AdminFacilities from "../Pages/Admin/AdminFacilities.vue"
 import AdminCalendar from "../Pages/Admin/AdminCalendar.vue"
 import AdminReservation from "../Pages/Admin/AdminReservation.vue"
 // import AdminProfile from "../Pages/Admin/AdminProfile.vue"
-// import AdminPayment from "../Pages/Admin/AdminPayment.vue"
+import ApprovedReservation from "../Pages/Admin/ApprovedReservation.vue"
 import AdminReport from "../Pages/Admin/AdminReport.vue"
 import Pic from "../Components/Admin/Pic.vue"
 import AdminServices from "../Pages/Admin/AdminServices.vue"
 import EditFacilities from "../Components/Admin/EditFacilities.vue"
 //---New----//
 import Approved from "../Components/Admin/Approved.vue"
-
+import Addservices from "../Components/Admin/Addservices.vue"
+import EditServices from "../Components/Admin/EditServices.vue"
 
 
 const router = createRouter({
@@ -132,6 +132,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/services/edit/:id',
+      name: 'edit-services',
+      component: EditServices,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
+    },
+    {
       path: '/admin/admincalendar',
       name: 'admincalendar',
       component: AdminCalendar,
@@ -148,6 +156,14 @@ const router = createRouter({
       },
     },
 
+    {
+      path: '/admin/approvedreservation',
+      name: 'approvedreservation',
+      component: ApprovedReservation,
+      meta: {
+        requiresAuth: true, // This route requires authentication
+      },
+    },
 
     {
       path: '/admin/approved',//new

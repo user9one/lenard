@@ -19,7 +19,9 @@ class Reservation extends Model
         'startTime',
         'endTime',
         'participants',
-        'total'
+        'total',
+        'status'
+
     ];
 
    // In a controller, e.g., ReservationController.php

@@ -33,45 +33,69 @@ class ServicesController extends Controller
         }
 
         public function saveServices(Request $request)
-{
-    $servicesData = $request->all(); // Retrieve all data sent from the frontend
+                {
+                    $servicesData = $request->all(); // Retrieve all data sent from the frontend
 
-    foreach ($servicesData as $data) {
-        $service = new Service();
-        $service->service_name = $data['service_name'];
-        $service->type = $data['type'];
-        $service->fee = $data['fee'];
-        $service->unit = $data['unit'];
-        $service->note = $data['note'];
-        $service->monthFrom = $data['monthFrom'];
-        $service->monthTo = $data['monthTo'];
+                    foreach ($servicesData as $data) {
+                        $service = new Service();
+                        $service->service_name = $data['service_name'];
+                        $service->type = $data['type'];
+                        $service->fee = $data['fee'];
+                        $service->unit = $data['unit'];
+                        $service->note = $data['note'];
+                        $service->monthFrom = $data['monthFrom'];
+                        $service->monthTo = $data['monthTo'];
 
-        $service->save();
-    }
+                        $service->save();
+                    }
 
-    return response()->json(['message' => 'Services saved successfully']);
-}
+                    return response()->json(['message' => 'Services saved successfully']);
+                }
 
-public function getServices()
-{
-    $services = Service::all(); // Assuming 'Service' is your model name
+            public function getServices()
+            {
+                $services = Service::all(); // Assuming 'Service' is your model name
 
-    return response()->json($services);
-}
+                return response()->json($services);
+            }
 
-public function editService(Request $request, $id)
-{
-    $service = Service::find($id); // Find the service by its ID
+        public function getServiceById($id)
+            {
+                $service = Service::find($id); // Find the service by its ID
 
-    if (!$service) {
-        return response()->json(['message' => 'Service not found'], 404);
-    }
+                if (!$service) {
+                    return response()->json(['message' => 'Service not found'], 404);
+                }
 
-    // Update the service with the new data
-    $service->update($request->all());
+                return response()->json($service);
+            }
 
-    return response()->json(['message' => 'Service updated successfully']);
-}
+            public function editService(Request $request, $id)
+                {
+                    $service = Service::find($id); // Find the service by its ID
+
+                    if (!$service) {
+                        return response()->json(['message' => 'Service not found'], 404);
+                    }
+
+                    // Update specific fields based on the request
+                    $service->fill($request->only([
+                        'service_name',
+                        'type',
+                        'fee',
+                        'unit',
+                        'note',
+                        'monthFrom',
+                        'monthTo'
+                        // Add other fields as needed
+                    ]));
+
+                    // Save the updated service
+                    $service->save();
+
+                    return response()->json(['message' => 'Service updated successfully']);
+                }
+
 
 public function deleteService($id)
 {
@@ -86,6 +110,10 @@ public function deleteService($id)
 
     return response()->json(['message' => 'Service deleted successfully']);
 }
+
+
+
+
 
     
 }

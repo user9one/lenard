@@ -116,7 +116,7 @@
           
 
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-              <table class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+              <table class="w-full text-sm text-left rtl:text-right text-black dark:text-black">
                   <thead class="text-xs text-white uppercase bg-green-800 dark:text-white">
                       <tr>
                           <th scope="col" class="px-6 py-3">
@@ -149,8 +149,8 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <tr class="bg-gray-400 border-b border-green-800"  v-for="reservation in reservations" :key="reservation.id">
-                          <th scope="row" class="px-6 py-4 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100">
+                      <tr class=" border-b border-green-800"  v-for="reservation in reservations" :key="reservation.id">
+                          <th scope="row" class="px-6 py-4 font-medium text-black  dark:text-black">
                              {{ reservation.reservation_details.facility_name }}
                           </th>
                           <td class="px-6 py-4">
@@ -163,21 +163,38 @@
                               {{ reservation.reservation_details.participants }}
                           </td>
                           <td class="px-6 py-4">
-                              {{ reservation.reservation_details.eventDateFrom }}
+                              {{ reservation.reservation_details.eventDateFrom }} to {{ reservation.reservation_details.eventDateTo }}
                           </td>
                           <td class="px-6 py-4">
                               {{ reservation.reservation_details.startTime }} to {{ reservation.reservation_details.endTime }}
                           </td>
-                          <td class="px-6 py-4">
-                            <div :class="[statusClass, 'hover:bg-white-200', 'text-white', 'font-semibold', 'py-2', 'px-4', 'rounded-md']">{{ reservation.reservation_details.status == 1 ? 'Approved' : 'Cancelled' }}</div>
-                          </td>
+ <td class="px-6 py-4">
+  <div
+    :class="[
+      {
+        'bg-blue-200': reservation && reservation.reservation_details && reservation.reservation_details.Status === 0,
+        'bg-yellow-300': reservation && reservation.reservation_details && reservation.reservation_details.Status === 1,
+        'bg-red-300': reservation && reservation.reservation_details && (reservation.reservation_details.Status === 2 || reservation.reservation_details.Status === 3),
+      },
+      'hover:bg-white-200',
+      'text-black',
+      'font-semibold',
+      'py-2',
+      'px-4',
+      'rounded-md'
+    ]"
+  >
+    {{ getStatusText(reservation && reservation.reservation_details && reservation.reservation_details.Status) }}
+    {{ console.log('Status:', reservation && reservation.reservation_details && reservation.reservation_details.Status) }}
+  </div>
+</td>
                           <td class="px-6 py-4">
                             <button @click="openModal(reservation)" class="bg-green-800 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300 ">View</button>
                           </td>
                           <td class="px-6 py-4">
-                            <lord-icon  @click="approveReservation(reservation.reservation_details.reservation_id)" id="aprroved" src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#0a5c15" class="w-9 h-9 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300 " ></lord-icon>
-                            <lord-icon  @click="cancelledReservation(reservation.reservation_details.reservation_id)" id="cancelled" src="https://cdn.lordicon.com/zxvuvcnc.json" trigger="hover" colors="primary:#c71f16" class="w-9 h-9 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300 " ></lord-icon>
-                            <lord-icon @click="rescheduleReservation" id="rescheduled" src="https://cdn.lordicon.com/wmlleaaf.json" trigger="morph" colors="primary:#e8e230" state="morph-calendar" class="w-9 h-9 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300"></lord-icon>
+                            <button @click="approveReservation(reservation.reservation_details.reservation_id)" class="bg-green-800 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300">Approve</button>
+                            <button @click="confirmDecline(reservation.reservation_details.reservation_id)" class="bg-red-800 hover:bg-red-700 text-white mt-2 mb-2 font-semibold py-2 px-4 rounded-md transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300">Decline</button>
+                            <button @click="openRescheduleModal(reservation)" class="bg-yellow-500 hover:bg-yellow-400 text-white font-semibold py-2 px-4 rounded-md transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300">Reschedule</button>
                           </td>
                       </tr>
                   </tbody>
@@ -186,6 +203,60 @@
       </div><!--Content End-->
       <div>
           <reservationModal v-if="showModal" :reservation="selectedReservation" @close="closeModal"></reservationModal>
+          <div v-if="showRescheduleModal" class="modal">
+  <div class="modal-content reschedule-content">
+    <h2>Reschedule Reservation</h2>
+    <!-- Date Pickers and Time Inputs -->
+    <div class="reschedule-grid">
+      <!-- Start Date and End Date -->
+      <div class="reschedule-row">
+        <label for="startDatePicker">Start Date:</label>
+        <input v-model="modifiedReservation.reservation_details.eventDateFrom"
+          class="date-input"
+          placeholder="Start Date"
+          id="startDatePicker"
+          @focus="showStartDatePicker"
+        />
+        <label for="endDatePicker">End Date:</label>
+        <input
+          v-model="modifiedReservation.reservation_details.eventDateTo"
+          class="date-input"
+          placeholder="End Date"
+          id="endDatePicker"
+          @focus="showEndDatePicker"
+        />
+      </div>
+      <!-- Start Time and End Time -->
+      <div class="reschedule-row">
+        <label for="startTimeInput">Start Time:</label>
+        <input
+          type="time"
+          v-model="modifiedReservation.reservation_details.startTime"
+          @change="setTimeFormat"
+          required
+          id="startTimeInput"
+        />
+        <label for="endTimeInput">End Time:</label>
+        <input
+          type="time"
+          v-model="modifiedReservation.reservation_details.endTime"
+          @change="setTimeFormat"
+          required
+          id="endTimeInput"
+        />
+      </div>
+      <!-- Buttons -->
+      <div class="reschedule-row">
+        <div></div>
+        <div class="buttons">
+          <button @click="saveRescheduledReservation">Save Changes</button>
+          <button @click="showRescheduleModal = false">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
       </div>
   </div>
 </template>
@@ -193,6 +264,10 @@
 <script>
 import axios from 'axios';
 import reservationModal from '../ReservationModal.vue';
+import Swal from 'sweetalert2';
+import flatpickr from 'flatpickr'; // Import Flatpickr library
+import 'flatpickr/dist/flatpickr.min.css'; // Import Flatpickr styles
+
 
   export default {
     components: {
@@ -204,16 +279,45 @@ import reservationModal from '../ReservationModal.vue';
           reservations: [],
           isSidePanelOpen: true,
           showModal: false,
-          selectedReservation: [], // Add this line
+          selectedReservation: [], 
           status: 'Pending',
           notification: null,
+          showRescheduleModal: false, 
+
+          modifiedReservation: {
+            reservation_details: {
+              eventDateFrom: '',
+              eventDateTo: '',
+            },
+          },
         };
   },
   mounted () {
     this.loadAdminReservations();
     this.checkUser();
   },
+
   methods: {
+
+        showStartDatePicker() {
+        flatpickr("#startDatePicker", {
+        dateFormat: "Y-m-d",
+        onClose: selectedDates => {
+          this.modifiedReservation.reservation_details.eventDateFrom = selectedDates[0];
+        }
+        // Add other Flatpickr options if needed
+      }).open();
+        },
+        showEndDatePicker() {
+          flatpickr("#endDatePicker", {
+            dateFormat: "Y-m-d",
+            onClose: selectedDates => {
+              this.modifiedReservation.reservation_details.eventDateTo = selectedDates[0];
+            }
+            // Add other Flatpickr options if needed
+          }).open();
+        },
+
     toggleExpand(){
       this.expanded = !this.expanded;   
     },
@@ -223,7 +327,6 @@ import reservationModal from '../ReservationModal.vue';
           this.checkUser();
         })
       },
-
       checkUser(){
         axios.post('/check-user').then(({data})=>{
           if(!data){
@@ -232,7 +335,6 @@ import reservationModal from '../ReservationModal.vue';
           }
         })
       },
-
 
     loadAdminReservations() {
       axios.get('/reservations') // Adjust the API endpoint to fetch admin-specific reservations
@@ -250,24 +352,113 @@ import reservationModal from '../ReservationModal.vue';
         this.notification = null;
       }, 3000); // Hide the notification after 3 seconds (adjust as needed)
     },
-    approveReservation(id) {
-      this.status = 'Approved';
-      axios.post('/approve-reservation/'+id).then((response) => {
-        this.loadAdminReservations();
+
+
+    //-------------------APPROVE RESERVATION-------------------------//
+    approveReservation(reservationId) {
+    axios.post(`/approve-reservation/${reservationId}`)
+      .then(response => {
+        // Assuming the API returns the updated reservation data,
+        // you might want to update the local data or refresh the reservation list
+        this.loadAdminReservations(); // Update the reservations after approval
+        this.showNotification('Reservation Approved!', 'notification-success');
+        // Show SweetAlert2 confirmation
+        Swal.fire({
+            title: 'Approved!',
+            text: 'This Reservation has been approved',
+            icon: 'success',});
+      })
+      .catch(error => {
+        console.error('Error approving reservation:', error);
+        this.showNotification('Failed to approve reservation', 'notification-error');
       });
-      this.showNotification('Reservation Approved!', 'notification-success');
-    },
-    cancelledReservation(id) {
-      this.status = 'Cancelled';
-      axios.post('/cancel-reservation/'+id).then((response) => {
-        this.loadAdminReservations();
+  }, 
+
+//----------------------DECLINE THE RESERVATION-----------------//
+  confirmDecline(reservationId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this reservation!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Decline',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.declineReservation(reservationId);
+        }
       });
-      this.showNotification('Reservation Cancelled!', 'notification-cancelled');
     },
-    rescheduleReservation() {
-      this.status = 'Reschedule';
-      this.showNotification('Reservation Rescheduled!', 'notification-reschedule');
-    },
+  declineReservation(reservationId) {
+    axios.post(`/cancel-reservation/${reservationId}`)
+      .then(response => {
+        this.loadAdminReservations(); // Update the reservations after decline
+        this.showNotification('Reservation Declined!', 'notification-cancelled');
+
+        // Show SweetAlert2 confirmation
+        Swal.fire(
+          'Declined!',
+          'This Reservation has been declined.',
+          'success'
+        );
+      })
+      .catch(error => {
+        console.error('Error declining reservation:', error);
+        this.showNotification('Failed to decline reservation', 'notification-error');
+      });
+  },
+
+      //-----------------RESCHEDULE--------------------------//
+      openRescheduleModal(reservation) {
+        this.selectedReservation = reservation;
+        this.showRescheduleModal = true;
+        this.modifiedReservation = { ...reservation }; // Create a copy for modifications
+      },
+
+      saveRescheduledReservation() {
+        const reservationId = this.modifiedReservation.reservation_details.reservation_id;
+        console.log('Event Date From (before Axios):', this.modifiedReservation.reservation_details.eventDateFrom);
+        console.log('Event Date To (before Axios):', this.modifiedReservation.reservation_details.eventDateTo);
+        // Format the date to 'YYYY-MM-DD HH:MM:SS' before sending to the server
+        const formattedEventDateFrom = new Date(this.modifiedReservation.reservation_details.eventDateFrom).toISOString().slice(0, 19).replace('T', ' ');
+        const formattedEventDateTo = new Date(this.modifiedReservation.reservation_details.eventDateTo).toISOString().slice(0, 19).replace('T', ' ');
+
+        
+        axios.post(`/reschedule-reservation/${reservationId}`, {
+              eventDateFrom: formattedEventDateFrom,
+              eventDateTo: formattedEventDateTo,
+              startTime: this.modifiedReservation.reservation_details.startTime,
+              endTime: this.modifiedReservation.reservation_details.endTime,
+        })
+        .then(response => {
+            this.loadAdminReservations(); // Update the reservations after rescheduling
+            this.showNotification('Reservation Rescheduled!', 'notification-reschedule');
+            this.showRescheduleModal = false; // Close the modal after successful reschedule
+        })
+        .catch(error => {
+            console.error('Error rescheduling reservation:', error);
+            this.showNotification('Failed to reschedule reservation', 'notification-error');
+        });
+      },
+
+      //--------------COLOR OF STATUS ------------------//
+      getStatusText(status) {
+    switch (status) {
+      case 0:
+        return 'Pending';
+      case 1:
+        return 'Approved';
+      case 2:
+        return 'Cancelled';
+      case 3:
+        return 'Finished';
+      default:
+        return 'Unknown';
+    }
+  },
+        
+
     toggleSidePanel() {
       this.isSidePanelOpen = !this.isSidePanelOpen;
     },
@@ -344,7 +535,7 @@ margin-right: 0;
   right: 20px;
   padding: 10px;
   background-color: #4caf50; /* Green background color */
-  color: white;
+  color: rgb(0, 0, 0);
   border-radius: 5px;
   z-index: 1;
 }
@@ -358,4 +549,51 @@ margin-right: 0;
   background-color: #4caf50; /* Red background color for error */
   color: white;
 }
+
+/* Add these styles to your CSS file */
+.modal-content.reschedule-content {
+  padding: 20px;
+}
+
+.reschedule-grid {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.reschedule-row {
+  display: flex;
+  align-items: center;
+}
+
+.reschedule-row label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.date-input,
+#startTimeInput,
+#endTimeInput {
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  width: calc(100% - 90px);
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Additional styles for buttons */
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
 </style>

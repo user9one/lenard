@@ -68,54 +68,93 @@ class ReservationController extends Controller
 
 
     //---------------------reservation----------------------------//
-    public function approveReservation($id){
-        $approval = Reservation::find($id);
-        $approval->status = 1;
-        $approval->save();
+        public function approveReservation($id)
+        {
+            $approval = Reservation::find($id);
+            $approval->status = 1; // Update the status to 1 for approval
+            $approval->save();
 
-        return $approval;
-    }
-    public function cancelReservation($id){
-        $approval = Reservation::find($id);
-        $approval->status = 2;
-        $approval->save();
+            return $approval;
+        }
 
-        return $approval;
-    }
+        public function cancelReservation($id)
+        {
+            $cancellation = Reservation::find($id);
+            $cancellation->status = 3; // Update the status to 3 for cancellation
+            $cancellation->save();
+        
+            return $cancellation;
+        }
+        
     public function index()
-{
-    $adminId = Auth::id();
+    {
 
-    // Retrieve reservations
-    $reservationsData = Reservation::select('*', DB::raw("reservations.id as reservation_id"))
-        ->join('facility', 'reservations.facility_id', '=', 'facility.id')
-        ->join('clients', 'reservations.client_id', '=', 'clients.id')
-        ->where('admin_id', $adminId)
-        ->get();
+        $adminId = Auth::id();
 
-    // Initialize an empty array to store the result
-    $reservations = [];
-
-    // Loop through each reservation and fetch associated services
-    foreach ($reservationsData as $reservation) {
-        $reservationId = $reservation->reservation_id;
-
-        // Retrieve services for the current reservation
-        $services = ReservationService::select('*', DB::raw("reservation_services.id as reservation_service_id"))
-            ->join('services', 'reservation_services.service_id', '=', 'services.id')
-            ->where('reservation_id', $reservationId)
+        // Retrieve reservations
+        $reservationsData = Reservation::select('*', DB::raw("reservations.id as reservation_id"))
+            ->join('facility', 'reservations.facility_id', '=', 'facility.id')
+            ->join('clients', 'reservations.client_id', '=', 'clients.id')
+            ->where('admin_id', $adminId)
             ->get();
 
-        // Add the reservation and its associated services to the result array
-        $reservations[] = [
-            'reservation_details' => $reservation,
-            'services_details' => $services,
-        ];
+        // Initialize an empty array to store the result
+        $reservations = [];
+
+        // Loop through each reservation and fetch associated services
+        foreach ($reservationsData as $reservation) {
+            $reservationId = $reservation->reservation_id;
+
+            // Retrieve services for the current reservation
+            $services = ReservationService::select('*', DB::raw("reservation_services.id as reservation_service_id"))
+                ->join('services', 'reservation_services.service_id', '=', 'services.id')
+                ->where('reservation_id', $reservationId)
+                ->get();
+
+                    
+            // Add the reservation and its associated services to the result array
+            $reservations[] = [
+                'reservation_details' => $reservation,
+                'services_details' => $services,
+                
+            ];
+        }
+
+        // Return the result as JSON
+        return response()->json($reservations);
+
     }
 
-    // Return the result as JSON
-    return response()->json($reservations);
+    public function rescheduleReservation(Request $request, $id)
+        {
+            $reservation = Reservation::find($id);
 
-}
+            $reservation->update([
+                'eventDateFrom' => $request->input('eventDateFrom'),
+                'eventDateTo' => $request->input('eventDateTo'),
+                'startTime' => $request->input('startTime'),
+                'endTime' => $request->input('endTime'),
+            ]);
+
+            return $reservation;
+        }
+
+
+
+        //---------------------------------------EXPERIMENT LANG, APPROVED ONLY HERE BESHY-----------------//
+
+        public function getApprovedReservations()
+        {
+            $adminId = Auth::id();
+
+            $approvedReservations = Reservation::select('*', DB::raw("reservations.id as reservation_id"))
+                ->join('facility', 'reservations.facility_id', '=', 'facility.id')
+                ->join('clients', 'reservations.client_id', '=', 'clients.id')
+                ->where('admin_id', $adminId)
+                ->where('status', 1) // Fetch only approved reservations
+                ->get();
+
+            return response()->json($approvedReservations);
+        }
 
 }

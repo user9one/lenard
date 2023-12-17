@@ -83,24 +83,32 @@ Route::post('/imageList', [ImageController::class, 'imageList']);
 Route::post('/delete-image/{id}', [ImageController::class, 'deleteImage']);
 
 Route::get('/get-services', [ServicesController::class, 'getServices']);
-Route::put('/update-services/{id}', [ServicesController::class, 'editService']);
 Route::delete('/delete-services/{id}', [ServicesController::class, 'deleteService']);
+Route::put('/update-service/{id}', [ServicesController::class, 'editService']);
+Route::get('/get-service/{id}', [ServicesController::class, 'getServiceById']);
 
 
 Route::get('/reservations', [ReservationController::class, 'index']);
 Route::get('/services', [ServicesController::class, 'index']);
 Route::post('/services', [ServicesController::class, 'store']);
 Route::delete('/services/{service}', [ServicesController::class, 'destroy']);
+Route::post('/approve-reservation/{id}', [ReservationController::class, 'approveReservation']);
+Route::post('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation']);
+Route::post('/reschedule-reservation/{id}', [ReservationController::class, 'rescheduleReservation']);
+Route::middleware(['auth'])->get('/load-admin-acilities', [FacilitiesController::class, 'loadAdminFacilities']);
+
+
 Route::post('/list-facilities/{id}', [FacilitiesController::class, 'getFacilityDetails']);
 Route::post('/facility-prices/{id}', [FacilitiesController::class, 'getFacilityPricing']);
 Route::post('/save-edited-facility/{id}', [FacilitiesController::class, 'updateFacility']);
 Route::post('/save-edited-facility-prices/{id}', [FacilitiesController::class, 'saveEditedFacilityPrices']);
-Route::post('/approve-reservation/{id}', [ReservationController::class, 'approveReservation']);
-Route::post('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation']);
 
 
-Route::middleware(['auth'])->get('/load-admin-acilities', [FacilitiesController::class, 'loadAdminFacilities']);
+// Route for fetching pending reservations
+Route::get('/pending-reservations', [ReservationController::class, 'getPendingReservations']);
 
+// Route for fetching approved reservations
+Route::get('/approved-reservations', [ReservationController::class, 'getApprovedReservations']);
 
 
 
