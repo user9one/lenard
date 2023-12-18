@@ -40,7 +40,7 @@
           Lorem ipsum dolor sit amet consectetur adipisicing elit...
         </h4>
         <h1 class="text-lg md:text-xl lg:text-2xl">
-          THIS IS FOR THE IMAGE CAROUSEL
+          THIS IS FOR THE RANDOMIZED IMAGE CAROUSEL
         </h1>
       </div>
 

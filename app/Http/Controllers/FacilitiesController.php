@@ -176,6 +176,18 @@ public function saveFacility(Request $request)
 
         }
 
+
+    // Function to get the count of facilities held by the admin
+    public function countFacilities()
+    {
+        $adminId = Auth::id();
+
+        // Fetch the count of facilities where the admin_id matches the authenticated admin
+        $facilityCount = Facility::where('admin_id', $adminId)->count();
+
+        return response()->json(['facilityCount' => $facilityCount]);
+    }
+
         
     
 }

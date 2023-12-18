@@ -7,16 +7,49 @@
         <img src="\src\mmsu-logo.png" alt="Logo" class="w-36" />
       </div>
       <div class="grid grid-cols-1 mt-20 divide-y divide-dashed">
-        <router-link to="/admin/admindashboard" class="block px-4 py-2 text-gray-800 router-link" trigger="hover" active-class="active-link">
-          <span class="flex items-center">Dashboard</span>
-        </router-link>
-        <router-link to="/admin/admincalendar" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
-          <span class="flex items-center">Calendar</span>
-        </router-link>
-        <router-link to="/admin/login" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
-          <button @click="logout" class="flex items-center">Logout</button>
-        </router-link>
-      </div>
+            <router-link to="/admin/admindashboard" class="block px-4 py-2 text-gray-800 router-link" trigger="hover" active-class="active-link">
+                  <span class="flex items-center">
+                      <lord-icon src="https://cdn.lordicon.com/wmwqvixz.json" trigger="morph" state="morph-home-3" colors="primary:#ffffff" class="w-7 h-7 mr-2" />
+                      Dashboard
+                  </span>
+              </router-link>
+              <router-link to="/admin/admincalendar" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
+                  <span class="flex items-center">
+                      <lord-icon src="https://cdn.lordicon.com/wmlleaaf.json" trigger="hover" colors="primary:#ffffff" class="w-7 h-7 mr-2" />
+                      Calendar
+                  </span>
+              </router-link> 
+              <router-link to="/admin/adminreservation" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
+                  <span class="flex items-center">
+                    <lord-icon src="https://cdn.lordicon.com/omiqopzf.json" trigger="hover" colors="primary:#ffffff" class="w-7 h-7 mr-2" />
+                      Reservation 
+                  </span>
+              </router-link>
+              <router-link to="/admin/adminfacilities" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
+                  <span class="flex items-center">
+                    <lord-icon src="https://cdn.lordicon.com/ipnwkgdy.json"  trigger="hover" colors="primary:#ffffff" class="w-7 h-7 mr-2" />
+                      Facilities 
+                  </span>
+              </router-link>
+              <router-link to="/admin/adminservices" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
+                  <span class="flex items-center">
+                      <lord-icon src="https://cdn.lordicon.com/iazmohzf.json" trigger="hover" colors="primary:#ffffff" class="w-7 h-7 mr-2" />
+                      Services 
+                  </span>
+              </router-link>                
+              <router-link to="/admin/adminreport" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
+                  <span class="flex items-center">
+                      <lord-icon src="https://cdn.lordicon.com/yrbmguoo.json" trigger="hover" colors="primary:#ffffff" class="w-7 h-7 mr-2" />
+                      Report 
+                  </span>
+              </router-link> 
+              <router-link to="/admin/login" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
+                <button @click="logout" class="flex items-center">
+                  <lord-icon src="https://cdn.lordicon.com/whtfgdfm.json" trigger="hover" colors="primary:#ffffff" class="w-7 h-7 mr-2" />
+                  Logout
+                </button>
+              </router-link>
+          </div>
     </aside>
     <!-- Side Nav End -->
 
@@ -199,6 +232,18 @@ watch(events, () => {
 </script>
 
 <style>
+
+.router-link:hover {
+color: white;
+background-color: #0C4B05; 
+} 
+
+.active-link {
+color: white;
+background-color: #0C4B05; 
+}
+
+
 #calendar {
   width: 1100px;
   height: 550px;

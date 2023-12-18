@@ -113,7 +113,19 @@
           </div> <!--Sub Nav End 1-->
 
 
-          
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <label for="statusFilter">Filter by Status:</label>
+              <select v-model="selectedStatus" @change="filterReservations">
+                <option value="all">All</option>
+                <option value="0">Pending</option>
+                <option value="1">Approved</option>
+                <option value="2">Finished</option>
+                <option value="3">Declined</option>
+              </select>
+            </div>
+          </div>
+
 
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
               <table class="w-full text-sm text-left rtl:text-right text-black dark:text-black">
@@ -149,7 +161,7 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <tr class=" border-b border-green-800"  v-for="reservation in reservations" :key="reservation.id">
+                      <tr class=" border-b border-green-800"  v-for="reservation in filteredReservations" :key="reservation.id">
                           <th scope="row" class="px-6 py-4 font-medium text-black  dark:text-black">
                              {{ reservation.reservation_details.facility_name }}
                           </th>
@@ -275,11 +287,13 @@ import 'flatpickr/dist/flatpickr.min.css'; // Import Flatpickr styles
     },
       data() {
         return {
-          expanded: true,
+          expanded: false,
           reservations: [],
           isSidePanelOpen: true,
           showModal: false,
           selectedReservation: [], 
+          selectedStatus: 'all',
+          filteredReservations: [],
           status: 'Pending',
           notification: null,
           showRescheduleModal: false, 
@@ -298,6 +312,17 @@ import 'flatpickr/dist/flatpickr.min.css'; // Import Flatpickr styles
   },
 
   methods: {
+
+        filterReservations() {
+          if (this.selectedStatus === 'all') {
+            this.filteredReservations = this.reservations; // Show all reservations
+          } else {
+            const selectedStatus = parseInt(this.selectedStatus);
+            this.filteredReservations = this.reservations.filter(
+              reservation => reservation.reservation_details.Status === selectedStatus
+            );
+          }
+        },
 
         showStartDatePicker() {
         flatpickr("#startDatePicker", {
@@ -340,6 +365,7 @@ import 'flatpickr/dist/flatpickr.min.css'; // Import Flatpickr styles
       axios.get('/reservations') // Adjust the API endpoint to fetch admin-specific reservations
         .then(({ data }) => {
           this.reservations = data;
+          this.filteredReservations = data;
         })
         .catch(error => {
           console.error('Error loading admin reservations:', error);
@@ -450,9 +476,9 @@ import 'flatpickr/dist/flatpickr.min.css'; // Import Flatpickr styles
       case 1:
         return 'Approved';
       case 2:
-        return 'Cancelled';
-      case 3:
         return 'Finished';
+      case 3:
+        return 'Declined';
       default:
         return 'Unknown';
     }
@@ -479,6 +505,16 @@ import 'flatpickr/dist/flatpickr.min.css'; // Import Flatpickr styles
         'bg-yellow-400': this.status === 'Reschedule', 
       };
     },
+    // filterReservations() {
+    //   if (this.selectedStatus === 'all') {
+    //     this.filteredReservations = this.reservations; // Show all reservations
+    //   } else {
+    //     const selectedStatus = parseInt(this.selectedStatus);
+    //     this.filteredReservations = this.reservations.filter(
+    //       reservation => reservation.reservation_details.Status === selectedStatus
+    //     );
+    //   }
+    // },
   },
 };
 </script>

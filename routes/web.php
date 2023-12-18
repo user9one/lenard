@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\FacilitiesController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminFacility;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ReservationServicesController;
@@ -88,6 +89,9 @@ Route::put('/update-service/{id}', [ServicesController::class, 'editService']);
 Route::get('/get-service/{id}', [ServicesController::class, 'getServiceById']);
 
 
+
+Route::get('/getreservationcount', [ReservationController::class, 'getAdminReservationCount']);
+Route::get('/getfacilitiescount', [FacilitiesController::class, 'countFacilities']);
 Route::get('/reservations', [ReservationController::class, 'index']);
 Route::get('/services', [ServicesController::class, 'index']);
 Route::post('/services', [ServicesController::class, 'store']);
@@ -111,7 +115,7 @@ Route::get('/pending-reservations', [ReservationController::class, 'getPendingRe
 Route::get('/approved-reservations', [ReservationController::class, 'getApprovedReservations']);
 
 
-
+Route::get('/adminname', [AdminFacility::class, 'getAdminName']);
 
 
 

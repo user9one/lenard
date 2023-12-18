@@ -214,6 +214,7 @@
   <script>
   import axios from 'axios';
   import reservationModal from '../ReservationModal.vue';
+  // import approvedModal from '../ApprovedModal.vue';
   import Swal from 'sweetalert2';
 
   
@@ -221,6 +222,7 @@
     export default {
       components: {
         reservationModal
+        //approvedModal
       },
         data() {
           return {

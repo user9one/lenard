@@ -1,8 +1,9 @@
+
+
 <template>
   <div>
     <header>
       <Navbar />
-      
     </header>
     <div class="headerdiv">
       <button @click.prevent="goBack" class="mr-2 bg-green-700 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded ml-10">Go Back</button>
@@ -10,23 +11,23 @@
 
     <div>
       <FacilityImageSlider :src="facilityImages" option="full" />
+
     </div>
-    
-         
-    <div class=" bg-white shadow-gray-500">
+
+    <div class="bg-white shadow-gray-500">
       <div class="grid grid-cols-1 gap-4 p-6 flex justify-center">
         <!-- First Row -->
-        <div class="bg-light-green rounded-lg shadow-md p-4">
+        <div class="bg-light-gray rounded-lg shadow-md p-4">
           <h1 class="font-bold font-serif text-2xl uppercase">{{ facility.facility_name }}</h1>
           <p class="italic mb-4 "> <b>LOCATION: </b>{{ facility.location }}</p>
           <div class="description-text">
-            <p class="mb-4" v-html="facility.description"></p>
+            <p class="mb-4">{{ facility.description }}</p>
           </div>
+          
         </div>
 
         <!-- Second Row with Two Separate Cards -->
-         <!-- Second Row with Two Separate Cards -->
-         <div class="flex justify-between gap-6">
+        <div class="flex justify-between gap-6">
           <!-- First Card -->
           <div class="w-1/2 bg-white rounded-lg shadow-md p-4 shadow-around">
             <h3 class="font-bold mb-2">Highlights/Key Features</h3>
@@ -41,6 +42,9 @@
 
           <!-- Second Card -->
           <div class="w-1/2 bg-white rounded-lg shadow-md p-4 shadow-around">
+            
+            <h3 class="font-bold mb-2">Capacity: {{ facility.capacity }}</h3>
+            
             <h3 class="font-bold mb-2">Rental Price</h3>
             <div class="price-container">
               <div v-for="price in facilityPrices" :key="price.id" class="price">
@@ -58,9 +62,9 @@
               </div>
             </div>
           </div>
-          </div>
-            <!-- Right-aligned router link -->
-            <div class="flex justify-end mr-5">
+        </div>
+                  <!-- Right-aligned router link -->
+                  <div class="flex justify-end mr-5">
                 <router-link
                   :to="{ name: 'reservenow', params: { facilityId: facility.id } }"
                   class="bg-green-800 hover:bg-yellow-400 text-white font-semibold py-4 px-9 rounded transition duration-300 text-sm" 
@@ -71,68 +75,68 @@
                   Book Now
                 </router-link>
               </div>
+
       </div>
+                    
+      <!-- Main content -->
+      <div class="main-content mx-10">
 
-      
-       <!-- Main content -->
-       <div class="main-content mx-10">
+        <!-- Modal overlay -->
+        <div class="modal-overlay" v-if="showReviewForm">
+          <!-- Modal content -->
+          <div class="modal">
+            <!-- Close button -->
+            <button @click="closeReviewForm" class="bg-red-500 text-white font-bold py-2 px-4 rounded mb-4">
+              Close
+            </button>
 
-          <!-- Modal overlay -->
-          <div class="modal-overlay" v-if="showReviewForm">
-            <!-- Modal content -->
-            <div class="modal">
-              <!-- Close button -->
-              <button @click="closeReviewForm" class="bg-red-500 text-white font-bold py-2 px-4 rounded mb-4">
-                Close
-              </button>
+            <!-- ReviewForm component -->
+            <ReviewForm />
+          </div>
+        </div>
 
-              <!-- ReviewForm component -->
-              <ReviewForm />
-            </div>
+        <!-- Facility Reviews section -->
+        <div class="facility-reviews mt-2 flex justify-between items-center">
+          <h2 class="mb-4">FACILITY REVIEWS</h2>
+          <button @click="showReviewForm = true" v-if="!showReviewForm" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded">
+            Write a Review
+          </button>
+        </div>
+
+          <!-- Display the average rating -->
+        <div class="flex items-center mb-4">
+          <i v-for="i in averageRating" :key="i" class="fas fa-star filled"></i>
+          <span class="ml-2">{{ averageRating.toFixed(1) }} stars ({{ reviews.length }} reviews)</span>
+        </div>
+
+          <!-- Display top 5 reviews -->
+          <div v-for="(review, index) in displayedReviews" :key="review.id" class="review-card mb-4">
+            <!-- Review card -->
+            <!-- Name and Date -->
+            <div class="review-header flex items-center">
+            <p class="font-bold">{{ review.reviewName }} | </p>
+            <!-- Display date -->
+            <p class="text-sm italic ml-1">{{ formatDate(review.created_at) }}</p>
           </div>
 
-<!-- Facility Reviews section -->
-<div class="facility-reviews mt-2 flex justify-between items-center">
-  <h2 class="mb-4">FACILITY REVIEWS</h2>
-  <button @click="showReviewForm = true" v-if="!showReviewForm" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded">
-    Write a Review
-  </button>
-</div>
+            <!-- Star rating -->
+            <div class="star-rating">
+              <i v-for="i in review.rating" :key="i" class="fas fa-star filled"></i>
+            </div>
 
-  <!-- Display the average rating -->
-<div class="flex items-center mb-4">
-  <i v-for="i in averageRating" :key="i" class="fas fa-star filled"></i>
-  <span class="ml-2">{{ averageRating.toFixed(1) }} stars ({{ reviews.length }} reviews)</span>
-</div>
+            <!-- Comment -->
+            <p>{{ review.comment }}</p>
+          </div>
 
-  <!-- Display top 5 reviews -->
-  <div v-for="(review, index) in displayedReviews" :key="review.id" class="review-card mb-4">
-    <!-- Review card -->
-    <!-- Name and Date -->
-    <div class="review-header flex items-center">
-    <p class="font-bold">{{ review.reviewName }} | </p>
-    <!-- Display date -->
-    <p class="text-sm italic ml-1">{{ formatDate(review.created_at) }}</p>
-  </div>
-
-    <!-- Star rating -->
-    <div class="star-rating">
-      <i v-for="i in review.rating" :key="i" class="fas fa-star filled"></i>
+          <!-- View More button -->
+          <button v-if="!showReviewForm && reviews.length > 4" @click="toggleReviews" class="bg-blue-500 text-white font-bold py-2 px-4 rounded mb-4">
+            {{ showAll ? 'View Less' : 'View More' }}
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Comment -->
-    <p>{{ review.comment }}</p>
-  </div>
-
-  <!-- View More button -->
-  <button v-if="!showReviewForm && reviews.length > 4" @click="toggleReviews" class="bg-blue-500 text-white font-bold py-2 px-4 rounded mb-4">
-    {{ showAll ? 'View Less' : 'View More' }}
-  </button>
-</div>
-</div>
-</div>
-
-<div>
+    <div>
     <Footer />
   </div>
 </template>
@@ -145,7 +149,6 @@ import Navbar from '../Components/Navbar.vue';
 import ReviewForm from '../Components/ReviewForm.vue';
 import axios from 'axios';
 import FacilityImageSlider from '../Components/FacilityImageSlider.vue';
-
 
 export default {
   components: {
@@ -172,35 +175,38 @@ export default {
       showAll: false,
     };
   },
-  methods: {
-    goBack() {
-      // Redirect to /facilities when canceled
-      this.$router.push('/facilities');
-    },
 
-    loadFacilityDetails() {
-      const facilityId = this.$route.params.facilityId;
 
-      // Get the current month (assuming it's 1-12)
-      const currentMonth = new Date().getMonth() + 1;
+    methods: {
 
-          axios.get(`/list-facilities/${facilityId}`).then(response => {
-            this.facility = response.data;
+      goBack() {
+        // Redirect to /facilities when canceled
+        this.$router.push('/facilities');
+      },
+      loadFacilityDetails() {
+        const facilityId = this.$route.params.facilityId;
 
-          });
+        // Get the current month (assuming it's 1-12)
+        const currentMonth = new Date().getMonth() + 1;
 
-          axios.get(`/facility-pricing/${facilityId}`).then(response => {
-            // Filter prices for the current month
-            const prices = response.data;
-            this.facilityPrices = prices.filter(price => {
-              return (
-                (price.monthFrom <= currentMonth && price.monthTo >= currentMonth) ||
-                price.monthTo === null // Include prices that are indefinite
-              );
+            axios.get(`/list-facilities/${facilityId}`).then(response => {
+              this.facility = response.data;
+
             });
-      });
-    },
-    fetchFacilityReviews() {
+
+            axios.get(`/facility-pricing/${facilityId}`).then(response => {
+              // Filter prices for the current month
+              const prices = response.data;
+              this.facilityPrices = prices.filter(price => {
+                return (
+                  (price.monthFrom <= currentMonth && price.monthTo >= currentMonth) ||
+                  price.monthTo === null // Include prices that are indefinite
+                );
+              });
+        });
+      },
+
+      fetchFacilityReviews() {
           const facilityId = this.$route.params.facilityId;
           axios.get(`/facility-reviews/${facilityId}`)
             .then(response => {
@@ -250,8 +256,9 @@ export default {
     const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     return formattedDate;
   },
-  },
-  computed: {
+
+    },
+    computed: {
       averageRating() {
         if (this.reviews.length === 0) {
           return 0; // Return default value when there are no reviews
@@ -261,6 +268,9 @@ export default {
         return Math.round(sum / this.reviews.length);
       },
     },
+
+
+
   mounted() {
     // Fetch  when the component is mounted
     this.loadFacilityDetails();
@@ -268,8 +278,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style scoped>
 .headerdiv {
@@ -397,27 +405,13 @@ export default {
   padding: 20px;
   border-radius: 5px;
   overflow-y: auto;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 /* Button styles */
-.close-button {
+button {
   font-weight: bold;
   cursor: pointer;
-  position: absolute;
-  top: 10px; /* Adjust this value to place the button where you want vertically */
-  left: 10px; /* Adjust this value to place the button where you want horizontally */
 }
-
-/* Form container */
-.form-container {
-  flex: 1;
-  /* Add any necessary styles for your form container */
-}
-
 
 /* Space above footer */
 .Footer {
@@ -430,5 +424,4 @@ export default {
   font-size: 24px;
   font-weight: bold;
 }
-
 </style>

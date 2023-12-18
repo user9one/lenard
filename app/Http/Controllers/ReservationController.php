@@ -125,6 +125,19 @@ class ReservationController extends Controller
 
     }
 
+
+    public function getAdminReservationCount()
+            {
+                $adminId = Auth::id();
+
+                $reservationCount = Reservation::join('facility', 'reservations.facility_id', '=', 'facility.id')
+                ->where('facility.admin_id', $adminId)
+                ->count();
+
+                return response()->json(['reservation_count' => $reservationCount]);
+            }
+
+
     public function rescheduleReservation(Request $request, $id)
         {
             $reservation = Reservation::find($id);

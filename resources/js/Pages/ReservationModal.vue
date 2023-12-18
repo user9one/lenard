@@ -15,7 +15,7 @@
         <div class="justify-center gap-14 m-5 text-lg font-semibold" style="font-family: Calibri">
             <div class="justify-between grid grid-cols-2 gap-4 w-full">
                 <!-- Reservation Details -->
-                <div class="bg-green-800 w-full h-full text-white p-2">
+                <div class="bg-emerald-800 rounded-lg w-full h-full text-white p-2">
                     <div>Event Name: {{reservation.reservation_details.event_name}}</div>
                     <div>Purpose: {{reservation.reservation_details.purpose}}</div>
                     <div>Participants: {{reservation.reservation_details.participants}}</div>
@@ -24,7 +24,7 @@
                     <div>End Time: {{reservation.reservation_details.endTime}}</div>
                 </div>
                 <!-- Contact Information -->
-                <div class="bg-green-700 w-full h-full text-white p-2">
+                <div class="bg-emerald-800 rounded-lg w-full h-full text-white p-2">
                     <div>Name: {{ reservation.reservation_details.fname }} {{ reservation.reservation_details.mname }} {{ reservation.reservation_details.lname }}</div>
                     <div>Email: {{ reservation.reservation_details.email }}</div>
                     <div>Phone: {{ reservation.reservation_details.phone }}</div>
@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <!-- Services Details -->
-                <div class="col-span-2 bg-green-500 w-full h-full text-white p-2" v-for="reservation in reservation.services_details">
+                <div class="col-span-2 bg-emerald-800 rounded-lg w-full h-full text-white p-2" v-for="reservation in reservation.services_details">
                     <div>Service Name: {{ reservation.service_name }}</div>
                     <div v-if="reservation.quantity !== null">Quantity: {{ reservation.quantity }}</div>
                     <div v-if="reservation.remarks !== null">Remarks: {{ reservation.remarks }}</div>

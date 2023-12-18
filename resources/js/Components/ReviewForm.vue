@@ -113,6 +113,9 @@ export default {
 .selected {
   color: orange;
 }
+.review-form {
+  /* Add your form styling here */
+}
 .form-group {
   margin-bottom: 20px;
 }

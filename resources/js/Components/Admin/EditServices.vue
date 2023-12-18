@@ -27,7 +27,7 @@
       <option value="audiovisual">Audiovisual</option>
       <option value="food">Food</option>
       <option value="tech">Tech</option>
-      <option value="furniture">Furniture</option>
+      <option value="seating">Seating</option>
     </select>
   </div>
   <div class="w-1/3">

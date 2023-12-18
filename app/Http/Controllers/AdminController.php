@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+use App\Models\Admin;
+
 class AdminController extends Controller
 {
     
@@ -37,4 +39,21 @@ class AdminController extends Controller
         return redirect('/admin/login');
     }
 
+    public function getAdminName()
+    {
+        $adminId = Auth::id(); // Assuming you're using authentication and can get the admin's ID
+
+        if ($adminId) {
+            $admin = Admin::find($adminId);
+            
+            if ($admin) {
+                return response()->json(['adminName' => $admin->name]);
+            } else {
+                return response()->json(['error' => 'Admin not found'], 404);
+            }
+        } else {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+}
 }

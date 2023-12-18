@@ -53,11 +53,14 @@
 
       <div class="bg-gray-100 shadow-xl min-h-screen w-full" style="font-family: Advantage"><!--Content-->
           <div class="grid grid-cols-1 flex-row border-b-4 border-yellow-400"><!--Sub Nav-->
-              <div class="shadow-md h-20 flex justify-start" style="background-color: #0C4B05">
+              <div class="shadow-md h-20 flex justify-between" style="background-color: #0C4B05">
                   <span class="flex items-center text-white text-xl font-semibold ml-4">
                           <lord-icon src="https://cdn.lordicon.com/uwinmnkh.json" trigger="hover" colors="primary:#ffffff"  class="w-10 h-10 mr-2" />
                           Overview
-                      </span>
+                        </span>
+                        <span class="text-white text-xl mr-4 flex items-center">
+                          Hello, {{ adminName }}
+                        </span>
                   </div>
               </div> <!--Sub Nav End-->
               
@@ -71,7 +74,7 @@
                           </router-link>
                       </span>
                       <div class="mt-5">
-                          <span id="countReservations" class="font-bold text-4xl text-white">100</span>
+                        <span id="countReservations" class="font-bold text-4xl text-white">{{ reservationCount }}</span>
                       </div>
                   </div><!--Box 1 End-->
 
@@ -85,19 +88,20 @@
                       </span>
 
                       <div class="mt-5">
-                          <span id="countFacilities" class="font-bold text-4xl text-white">50</span>
+                        <span id="countFacilities" class="font-bold text-4xl text-white">{{ facilityCount }}</span>
                       </div>
+
                   </div><!--Box 2 End-->
                   <div class="shadow lg border-r-4 border-yellow-400 basis-1/4 rounded-lg text-center" style="background-color: #0C4B05"><!--Box 3-->
                       <span class="flex items-center text-white text-lg font-normal mt-2">
                           <lord-icon src="https://cdn.lordicon.com/ncitidvz.json" trigger="hover" colors="primary:#ffffff" class="w-10 h-10 mr-2" />
                           <router-link to="/Payments">
-                          Payments?
+                          Payments
                           </router-link>
                       </span>
 
                       <div class="mt-5">
-                          <span id="countPayments" class="font-bold text-4xl text-white">100</span>
+                          <span id="countPayments" class="font-bold text-4xl text-white">0</span>
                       </div>
                   </div><!--Box 3 End-->
               </div><!--Main Box End-->
@@ -139,7 +143,6 @@
 </template>
 
 <script>
-
 import axios from 'axios';
 
 export default {
@@ -148,10 +151,43 @@ data() {
 
     isSidePanelOpen: true,
     showModal: false,
-
+    reservationCount: 0,
+    facilityCount: 0,
+    adminName: ''
   };
 },
 methods: {
+
+  fetchReservationCount() {
+      axios.get('/getreservationcount') // Update with your actual endpoint
+        .then(response => {
+          this.reservationCount = response.data.reservation_count;
+        })
+        .catch(error => {
+          console.error('Error fetching reservation count:', error);
+        });
+    },
+    fetchFacilityCount() {
+      axios.get('/getfacilitiescount')
+        .then(response => {
+          this.facilityCount = response.data.facilityCount; // Update facilityCount with fetched count
+        })
+        .catch(error => {
+          console.error('Error fetching facility count', error);
+        });
+    },
+
+    getAdminName() {
+      axios.get('/adminname')
+        .then(response => {
+          this.adminName = response.data.adminName; // Update adminName with fetched name
+        })
+        .catch(error => {
+          console.error('Error fetching admin name', error);
+        });
+    },
+
+
   toggleSidePanel() {
     this.isSidePanelOpen = !this.isSidePanelOpen;
   },
@@ -180,6 +216,11 @@ methods: {
       }
 },
 mounted() {
+
+  this.fetchReservationCount();
+  this.fetchFacilityCount();
+  this.getAdminName(); 
+
   const countElementReservations = document.getElementById('countReservations');
   const countElementFacilities = document.getElementById('countFacilities');
   const countElementPayments = document.getElementById('countPayments');
