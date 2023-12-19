@@ -115,22 +115,22 @@
   </div>
         <!-- Add Prices form -->
         <div class="mb-4 py-2">
-  <label class="block text-gray-700 font-semibold" for="amount">Amount (₱)</label>
-  <div class="relative">
-    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
-      ₱
-    </span>
-    <input
-      v-model="amount"
-      class="pl-8 w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus-ring-2 focus-ring-green-800"
-      type="number"
-      id="amount"
-      name="amount"
-      placeholder="Enter amount"
-      required
-    />
-  </div>
-</div>
+          <label class="block text-gray-700 font-semibold" for="amount">Amount (₱)</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+              ₱
+            </span>
+            <input
+              v-model="amount"
+              class="pl-8 w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus-ring-2 focus-ring-green-800"
+              type="number"
+              id="amount"
+              name="amount"
+              placeholder="Enter amount"
+              required
+            />
+          </div>
+        </div>
       
 
         <div class="mb-4">
@@ -169,6 +169,21 @@
           />
         </div>
 
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold" for="time-period">Time Period</label>
+            <select
+              v-model="timePeriod"
+              id="time-period"
+              class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-800"
+              name="timePeriod"
+              placeholder="Select Time Period"
+            >
+              <option value="1">Daytime</option>
+              <option value="2">Nighttime</option>
+              <option value="3">All day</option>
+            </select>
+          </div>
+
         <button
           class="bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded focus-outline-none focus-ring-2 focus-ring-green-500 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300"
           @click.prevent="addPrice">
@@ -184,6 +199,7 @@
         <th class="py-3 px-6 text-center bg-gray-200 border-b">Month From</th>
         <th class="py-3 px-6 text-center bg-gray-200 border-b">Month To</th>
         <th class="py-3 px-6 text-center bg-gray-200 border-b">Hours</th>
+        <th class="py-3 px-6 text-center bg-gray-200 border-b">Time Period</th>
         <th class="py-3 px-6 text-center bg-gray-200 border-b">Action</th>
       </tr>
     </thead>
@@ -193,6 +209,8 @@
         <td class="py-3 px-6 text-center border-b">{{ getMonthName(price.monthFrom) }}</td>
         <td class="py-3 px-6 text-center border-b">{{ getMonthName(price.monthTo) }}</td>
         <td class="py-3 px-6 text-center border-b">{{ price.hours }}</td>
+        <td class="py-3 px-6 text-center border-b">{{ price.timePeriod }}</td>
+       
         <td class="py-3 px-6 text-center border-b">
           <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full focus:outline-none transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300" @click="removePrice(index)">Remove</button>
         </td>
@@ -259,6 +277,7 @@
 <script>
 import axios from 'axios';
 import ClassicEditor from '/js/ckeditor_custom';
+import Swal from 'sweetalert2';
 
 export default {
   data() {
@@ -278,6 +297,7 @@ export default {
       monthFrom: '',
       monthTo: '',
       hours: '',
+      timePeriod: '',
       prices: [],
       months: [
         { value: 1, name: 'January' },
@@ -325,19 +345,21 @@ export default {
         monthFrom: this.monthFrom,
         monthTo: this.monthTo,
         hours: this.hours,
+        timePeriod: this.timePeriod,
       });
 
       this.amount = '';
       this.monthFrom = '';
       this.monthTo = '';
       this.hours = '';
+      this.timePeriod = ''
     },
     removePrice(index) {
       this.prices.splice(index, 1);
     },
     saveData() {
       const facilityForm = {
-        name: this.name,
+        facility_name: this.name,
         shortdes: this.shortdes,
         description: this.description,
         location: this.location,
@@ -349,6 +371,13 @@ export default {
         .then(response => {
           const facilityId = response.data.id;
           this.savePrices(facilityId);
+            // Show success message after facility update
+      Swal.fire({
+        title: 'Facility updated!',
+        text: 'Your facility has been updated successfully.',
+        icon: 'success',
+      });
+          
         })
         .catch(error => {
           console.error('Error uploading facility data:', error);
@@ -361,17 +390,17 @@ export default {
         monthFrom: price.monthFrom, 
         monthTo: price.monthTo,
         hours: price.hours,
+        timePeriod: price.timePeriod,
       }));
 
       axios.post('/save-edited-facility-prices/'+this.id, pricesData)
         .then(response =>{
-  console.log('Prices data successfully uploaded:', response.data);
-  this.resetForm();
-})
-.catch(error => {
-  console.error('Error uploading prices data:', error);
-});
-},
+          this.resetForm();
+        })
+        .catch(error => {
+          console.error('Error uploading prices data:', error);
+        });
+        },
 
 resetForm() {
   this.step = 1;
@@ -385,6 +414,7 @@ resetForm() {
   this.monthFrom = '';
   this.monthTo = '';
   this.hours = '';
+  this.timePeriod = '',
   this.prices = [];
   this.$router.push('/admin/adminfacilities');
 },

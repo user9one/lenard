@@ -127,6 +127,8 @@ public function saveFacility(Request $request)
        //  return $list;
    }
 
+
+
    public function saveEditedFacilityPrices(Request $request, $id){
 
     $facility = FacilityPrice::where('facility_id', $id)->delete();
@@ -141,7 +143,7 @@ public function saveFacility(Request $request)
         $facilityPrice->amount = $price['amount'];
         $facilityPrice->monthFrom = $price['monthFrom'];
         $facilityPrice->monthTo = $price['monthTo'];
-        $price->timePeriod = $priceData['timePeriod'];
+        $facilityPrice->timePeriod = $price['timePeriod'];
         $facilityPrice->hours = $price['hours'];
         $facilityPrice->save();
     }
@@ -170,11 +172,45 @@ public function saveFacility(Request $request)
             $adminId = Auth::id(); // Retrieve the ID of the currently logged-in admin
             
             // Fetch facilities based on admin_id
-            $facilities = Facility::where('admin_id', $adminId)->get();
+            $facilities = Facility::where('admin_id', $adminId)->with('prices')->get();
+
+            // If you have timePeriod and monthFrom/monthTo stored as integers, map them to their respective names
+                    $facilities->transform(function ($facility) {
+                        $facility->prices->transform(function ($price) {
+                            $price->timePeriod = $this->getTimePeriodName($price->timePeriod);
+                            $price->monthFrom = $this->getMonthName($price->monthFrom);
+                            $price->monthTo = $this->getMonthName($price->monthTo);
+                            return $price;
+                        });
+                        return $facility;
+                    });
 
             return response()->json($facilities);
 
         }
+
+    // Helper method to get month names
+            private function getMonthName($monthInt) {
+                $months = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                return $months[$monthInt - 1] ?? '';
+            }
+
+            // Helper method to get time period names
+            private function getTimePeriodName($timePeriod) {
+                switch ($timePeriod) {
+                    case 1:
+                        return 'Daytime';
+                    case 2:
+                        return 'Nighttime';
+                    case 3:
+                        return 'All Day';
+                    default:
+                        return '';
+                }
+            }
 
 
     // Function to get the count of facilities held by the admin

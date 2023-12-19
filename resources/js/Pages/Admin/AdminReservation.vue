@@ -97,7 +97,7 @@
           <div class="grid grid-cols-1 flex flex-row border-b-4 border-yellow-400"><!--Sub Nav-->
               <div class="shadow-md h-20 flex justify-start" style="background-color: #0C4B05">
                   <span class="flex items-center text-white text-xl font-semibold ml-4" style="font-family: Advantage">
-                      <img src="\Icons\Reservation.gif" alt="Reservation Icon" class="w-10 h-10 mr-2" />
+                    <lord-icon src="https://cdn.lordicon.com/omiqopzf.json" trigger="hover" colors="primary:#ffffff" class="w-10 h-10 mr-2" />
                       Reservation
                   </span>
               </div>
