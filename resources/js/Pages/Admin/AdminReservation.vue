@@ -85,10 +85,10 @@
                   </span>
               </router-link> 
               <router-link to="/admin/login" class="block px-4 py-2 text-gray-800 router-link" active-class="active-link">
-                <button @click="logout" class="flex items-center">
+                <span @click="logout" class="flex items-center">
                   <lord-icon src="https://cdn.lordicon.com/whtfgdfm.json" trigger="hover" colors="primary:#ffffff" class="w-7 h-7 mr-2" />
                   Logout
-                </button>
+                </span>
               </router-link>
           </div>
       </aside><!--Side Nav End-->
@@ -113,7 +113,7 @@
           </div> <!--Sub Nav End 1-->
 
 
-          <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center justify-between mb-2 mt-2 ml-2">
             <div>
               <label for="statusFilter">Filter by Status:</label>
               <select v-model="selectedStatus" @change="filterReservations">
@@ -127,7 +127,7 @@
           </div>
 
 
-          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <div class="relative overflow-x-auto shadow-md sm:rounded-sm">
               <table class="w-full text-sm text-left rtl:text-right text-black dark:text-black">
                   <thead class="text-xs text-white uppercase bg-green-800 dark:text-white">
                       <tr>

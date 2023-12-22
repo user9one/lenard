@@ -1,7 +1,7 @@
 
 <template lang="">
   <div class="flex flex-row w-full"><!--Main-->
-    <aside class="sticky top-0  shadow-gray-500 w-80 h-screen"><!--Side Nav-->
+    <aside class="sticky top-0 shadow-lg shadow-gray-500 w-80 h-screen"><!--Side Nav-->
       <div class="flex items-center justify-center h-14 mt-20">
          <img src="\src\mmsu-logo.png" alt="Logo" class="w-36" />
       </div>
@@ -55,7 +55,7 @@
           <div class="grid grid-cols-1 flex flex-row border-b-4 border-yellow-400"><!--Sub Nav-->
               <div class="shadow-md h-20 flex justify-start" style="background-color: #0C4B05">
                   <span class="flex items-center text-white text-xl font-semibold ml-4">
-                      <img src="\Icons\Services.gif" alt="Services Icon"  class="w-10 h-10 mr-2" />
+                    <lord-icon src="https://cdn.lordicon.com/iazmohzf.json" trigger="hover" colors="primary:#ffffff" class="w-10 h-10 mr-2" />
                       Services
                   </span>
               </div>

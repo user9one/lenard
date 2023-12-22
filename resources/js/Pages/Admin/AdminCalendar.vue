@@ -77,6 +77,7 @@
           <div class="justify-center gap-14 m-5 text-lg font-semibold" style="font-family: Calibri">
             <h2 class="text-center">Reservation Details</h2>
             <div class="bg-white rounded-lg shadow p-4">
+              <div>Facility: {{ selectedReservation.reservation_details.facility_name }}</div>
               <div>Event Name: {{ selectedReservation.reservation_details.event_name }}</div>
               <div>Purpose: {{ selectedReservation.reservation_details.purpose }}</div>
               <div>Participants: {{ selectedReservation.reservation_details.participants }}</div>
@@ -165,9 +166,10 @@ const calendarOptions = ref({
 
   eventContent: (arg) => {
     const div = document.createElement('div');
-    div.textContent = arg.event.title;
-    div.style.backgroundColor = arg.event.backgroundColor; // Set background color
-    div.style.color = 'black'; // Set text color
+      const facilityName = arg.event.extendedProps?.facility_name || 'No Facility'; // Using optional chaining to handle potential undefined
+      div.textContent = `${facilityName} - ${arg.event.title}`;
+      div.style.backgroundColor = arg.event.backgroundColor; // Set background color
+      div.style.color = 'black'; // Set text color
 
     return { domNodes: [div] };
   },
@@ -207,12 +209,15 @@ onMounted(async () => {
           title: reservation.reservation_details.event_name,
           start,
           end,
+          extendedProps: { // Ensure facility_name is included in extendedProps
+          facility_name: reservation.reservation_details.facility_name,
           reservation_details: {
             ...reservation.reservation_details,
           },
-          services_details: reservation.services_details || [], // Extract services_details
-          color: eventColor,
-        };
+        },
+        services_details: reservation.services_details || [],
+        color: eventColor,
+      };
       });
 
       events.value = mappedEvents; // Update events after processing the response

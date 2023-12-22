@@ -1,6 +1,6 @@
 <template lang="">
   <div class="flex flex-row w-full" style="overflow: auto"><!--Main-->
-    <aside class="sticky top-0 shadow-gray-500 w-80 h-screen"><!--Side Nav-->
+    <aside class="sticky top-0 shadow-lg shadow-gray-500 w-80 h-screen"><!--Side Nav-->
       <div class="flex items-center justify-center h-14 mt-20">
          <img src="\src\mmsu-logo.png" alt="Logo" class="w-36" />
       </div>
