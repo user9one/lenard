@@ -95,14 +95,14 @@ Route::get('/getfacilitiescount', [FacilitiesController::class, 'countFacilities
 Route::get('/reservations', [ReservationController::class, 'index']);
 Route::get('/services', [ServicesController::class, 'index']);
 Route::post('/services', [ServicesController::class, 'store']);
-Route::delete('/services/{service}', [ServicesController::class, 'destroy']);
-Route::post('/approve-reservation/{id}', [ReservationController::class, 'approveReservation']);
-Route::post('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation']);
-Route::post('/reschedule-reservation/{id}', [ReservationController::class, 'rescheduleReservation']);
+Route::delete('/services/{service}', [ServicesController::class, 'destroy']); 
+Route::post('/approve-reservation/{id}', [ReservationController::class, 'approveReservation']); //approve reservation
+Route::post('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation']); //cancel reservation
+Route::post('/reschedule-reservation/{id}', [ReservationController::class, 'rescheduleReservation']); //open calendar to reschedule
 Route::middleware(['auth'])->get('/load-admin-acilities', [FacilitiesController::class, 'loadAdminFacilities']);
+Route::get('/admin-facilities', [FacilitiesController::class, 'loadAdminFacilities']); // Route to fetch admin facilities
 
-
-Route::post('/list-facilities/{id}', [FacilitiesController::class, 'getFacilityDetails']);
+Route::post('/list-facilities/{id}', [FacilitiesController::class, 'getFacilityDetails']); 
 Route::post('/facility-prices/{id}', [FacilitiesController::class, 'getFacilityPricing']);
 Route::post('/save-edited-facility/{id}', [FacilitiesController::class, 'updateFacility']);
 Route::post('/save-edited-facility-prices/{id}', [FacilitiesController::class, 'saveEditedFacilityPrices']);

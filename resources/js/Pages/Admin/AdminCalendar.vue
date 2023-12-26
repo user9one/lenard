@@ -1,11 +1,17 @@
 <template>
   <div class="flex flex-row w-full">
+
+   
+
+
     <!-- Main -->
     <aside class="sticky top-0 shadow-lg shadow-gray-500 w-80 h-screen">
       <!-- Side Nav -->
       <div class="flex items-center justify-center h-14 mt-20">
         <img src="\src\mmsu-logo.png" alt="Logo" class="w-36" />
       </div>
+
+
       <div class="grid grid-cols-1 mt-20 divide-y divide-dashed">
             <router-link to="/admin/admindashboard" class="block px-4 py-2 text-gray-800 router-link" trigger="hover" active-class="active-link">
                   <span class="flex items-center">
@@ -53,6 +59,8 @@
     </aside>
     <!-- Side Nav End -->
 
+    
+
     <div class="bg-gray-100 shadow-xl h-screen w-full" style="overflow: auto">
       <!-- Content -->
       <div class="grid grid-cols-1 flex flex-row border-b-4 border-yellow-400">
@@ -63,7 +71,21 @@
         <!-- Sub Nav End -->
       </div>
 
-      <!-- Calendar -->
+    <!-- Legend -->
+    <div class="flex justify-between items-center bg-gray-200 p-4">
+    <h2 class="text-xl font-semibold">Legend</h2>
+    <div class="grid grid-cols-4 gap-2">
+      <div v-for="(facility, index) in facilityLegend" :key="index" class="flex items-center">
+        <div
+          class="w-4 h-4 rounded-full mr-2 border border-black"
+          :style="{ backgroundColor: facility.color }"
+        ></div>
+        <span class="text-sm">{{ facility.name }}</span>
+      </div>
+    </div>
+  </div>
+
+          <!-- Calendar -->
       <!-- Render FullCalendar only when events are available -->
           <div v-if="events.length > 0">
             <FullCalendar v-bind:options="calendarOptions" :events="events" />
@@ -133,6 +155,24 @@ import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import { watch } from 'vue';
 
+
+// Function to generate random hex color
+function getRandomColorForFacility(facilityName) {
+  // Use a combination of facility name and current timestamp to seed randomness
+  const seed = facilityName + Date.now();
+  let hash = 0;
+
+  for (let i = 0; i < seed.length; i++) {
+    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  // Convert the hash to an RGB color value
+  const color = '#' + ((hash & 0x00FFFFFF) | 0x808080).toString(16);
+
+  return color;
+}
+
+const facilityLegend = ref([]);
 const events = ref([]);
 const selectedReservation = ref(null);
 const showModal = ref(false);
@@ -183,9 +223,19 @@ onMounted(async () => {
   try {
     const response = await axios.get('/reservations');
     if (Array.isArray(response.data)) {
+
+      const facilityColors = new Map(); // store facility names and their respective colors
+
       const mappedEvents = response.data.map(reservation => {
         const start = `${reservation.reservation_details.eventDateFrom}T${reservation.reservation_details.startTime}`;
         const end = `${reservation.reservation_details.eventDateTo}T${reservation.reservation_details.endTime}`;
+
+        const facilityName = reservation.reservation_details.facility_name;
+        const color = facilityColors.has(facilityName) // Check if color exists for the facility
+        ? facilityColors.get(facilityName) // Use existing color for the facility
+        : getRandomColorForFacility(facilityName); // Generate a new random color for the facility
+
+       facilityColors.set(facilityName, color); // Store color for the facility
 
         let eventColor = '';
         switch (reservation.reservation_details.Status) {
@@ -216,11 +266,31 @@ onMounted(async () => {
           },
         },
         services_details: reservation.services_details || [],
-        color: eventColor,
+        color: color,
       };
       });
 
       events.value = mappedEvents; // Update events after processing the response
+
+            // Fetch all admin facilities
+            const adminFacilitiesResponse = await axios.get('/admin-facilities');
+            const adminFacilities = adminFacilitiesResponse.data;
+
+              facilityLegend.value = adminFacilities.map(facility => {
+                const facilityName = facility.facility_name;
+                const color = facilityColors.has(facilityName)
+                  ? facilityColors.get(facilityName)
+                  : getRandomColorForFacility(facilityName);
+
+                facilityColors.set(facilityName, color);
+
+                return {
+                  name: facilityName,
+                  color: color,
+                };
+              });
+
+
     } else {
       console.error('Invalid data format: Unable to process the response.');
     }
@@ -233,6 +303,7 @@ onMounted(async () => {
 watch(events, () => {
   calendarRenderKey.value += 1; // Increment key to force re-render
 });
+
 
 </script>
 
@@ -307,4 +378,9 @@ background-color: #0C4B05;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+
+/* LEGEND */
+.text-sm {
+  font-size: 0.8rem; 
+}
 </style>
